@@ -1,0 +1,11 @@
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\bin\Debug\ChineseChess.exe.config
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\bin\Debug\ChineseChess.exe
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\bin\Debug\ChineseChess.pdb
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Debug\ChineseChess.csproj.AssemblyReference.cache
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Debug\ChineseChess.Properties.Resources.resources
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Debug\ChineseChess.csproj.GenerateResource.cache
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Debug\ChineseChess.csproj.CoreCompileInputs.cache
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Debug\ChineseChess.exe
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Debug\ChineseChess.pdb
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Debug\ChineseChess.MainMenu.resources
+C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Debug\ChineseChess.Game.resources
