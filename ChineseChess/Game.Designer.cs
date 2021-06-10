@@ -32,6 +32,7 @@ namespace ChineseChess
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.QuitButton = new System.Windows.Forms.Button();
             this.TurnLabel = new System.Windows.Forms.Label();
+            this.ResetButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // QuitButton
@@ -54,11 +55,22 @@ namespace ChineseChess
             this.TurnLabel.TabIndex = 1;
             this.TurnLabel.Text = "Turn Label";
             // 
+            // ResetButton
+            // 
+            this.ResetButton.Location = new System.Drawing.Point(944, 228);
+            this.ResetButton.Name = "ResetButton";
+            this.ResetButton.Size = new System.Drawing.Size(229, 64);
+            this.ResetButton.TabIndex = 2;
+            this.ResetButton.Text = "Reset";
+            this.ResetButton.UseVisualStyleBackColor = true;
+            this.ResetButton.Click += new System.EventHandler(this.ResetButton_Click);
+            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1262, 977);
+            this.Controls.Add(this.ResetButton);
             this.Controls.Add(this.TurnLabel);
             this.Controls.Add(this.QuitButton);
             this.Name = "Game";
@@ -74,5 +86,6 @@ namespace ChineseChess
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button QuitButton;
         private System.Windows.Forms.Label TurnLabel;
+        private System.Windows.Forms.Button ResetButton;
     }
 }

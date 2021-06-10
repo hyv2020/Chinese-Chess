@@ -1402,5 +1402,30 @@ namespace ChineseChess
         {
             System.Windows.Forms.Application.Exit();
         }
+
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            //reset game
+            //remove all pieces from list
+            //hide the pictures to reset them
+            chessPieceList.Clear();
+            for (int i = 0; i < chessPiecePicsList.Count; i++)
+            {
+                chessPiecePicsList[i].Visible = false;
+            }
+            chessPiecePicsList.Clear();
+            soldierList.Clear();
+            horseList.Clear();
+            ministerList.Clear();
+            advisorList.Clear();
+            cannonList.Clear();
+            chariotList.Clear();
+            generalList.Clear();
+            MakeBoard();
+
+            //draw the chess piece again
+            DrawChessPiece(chessPiecePicsList, chessPieceList, chessSize);
+
+        }
     }
 }
