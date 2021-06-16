@@ -12,7 +12,6 @@ C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Debug\ChineseChess.Gam
 C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\bin\Debug\ChineseChess.exe.config
 C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\bin\Debug\ChineseChess.exe
 C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\bin\Debug\ChineseChess.pdb
-C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Debug\ChineseChess.csproj.AssemblyReference.cache
 C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Debug\ChineseChess.Game.resources
 C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Debug\ChineseChess.MainMenu.resources
 C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Debug\ChineseChess.Properties.Resources.resources

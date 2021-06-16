@@ -87,7 +87,7 @@ namespace ChineseChess
         private void Game_Load(object sender, EventArgs e)
         {
             aTimer = new System.Timers.Timer();
-            aTimer.Interval = 500;
+            aTimer.Interval = 1000;
             aTimer.Elapsed += GameUpdate;
             aTimer.Enabled = true;
             //turn-based mechanic
@@ -125,33 +125,30 @@ namespace ChineseChess
             }
             SideControl();
             //win condition
-            for (int i = 0; i < generalList.Count; i++)
+            while (generalList.Count < 2)
             {
-                if (generalList.Count < 2)
+                aTimer.Stop();
+                if (generalList[0].PieceColour == ChessPieceProperties.SideColour.Red)
                 {
-                    aTimer.AutoReset = false;
-                    if (generalList[0].PieceColour == ChessPieceProperties.SideColour.Red)
+                    MessageBox.Show("Red Wins", "We have a winner!");
+                    TurnLabel.ForeColor = Color.Red;
+                    SetText("RED WINS!");
+                    for (int j = 0; j < chessPieceList.Count; j++)
                     {
-                        aTimer.Stop();
-                        MessageBox.Show("Red Wins", "We have a winner!");
-                        TurnLabel.ForeColor = Color.Red;
-                        SetText("RED WINS!");
-                        for (int j = 0; j < chessPieceList.Count; j++)
-                        {
-                            chessPieceList[j].WasMoved = true;
-                        }
+                        chessPieceList[j].WasMoved = true;
                     }
-                    else
+                    break;
+                }
+                else
+                {
+                    MessageBox.Show("Black Wins", "We have a winner!");
+                    TurnLabel.ForeColor = Color.Black;
+                    SetText("BLACK WINS!");
+                    for (int j = 0; j < chessPieceList.Count; j++)
                     {
-                        aTimer.Stop();
-                        MessageBox.Show("Black Wins", "We have a winner!");
-                        TurnLabel.ForeColor = Color.Black;
-                        SetText("BLACK WINS!");
-                        for (int j = 0; j < chessPieceList.Count; j++)
-                        {
-                            chessPieceList[j].WasMoved = true;
-                        }
+                        chessPieceList[j].WasMoved = true;
                     }
+                    break;
                 }
             }
         }
@@ -1405,26 +1402,6 @@ namespace ChineseChess
 
         private void ResetButton_Click(object sender, EventArgs e)
         {
-            //reset game
-            //remove all pieces from list
-            //hide the pictures to reset them
-            chessPieceList.Clear();
-            for (int i = 0; i < chessPiecePicsList.Count; i++)
-            {
-                chessPiecePicsList[i].Visible = false;
-            }
-            chessPiecePicsList.Clear();
-            soldierList.Clear();
-            horseList.Clear();
-            ministerList.Clear();
-            advisorList.Clear();
-            cannonList.Clear();
-            chariotList.Clear();
-            generalList.Clear();
-            MakeBoard();
-
-            //draw the chess piece again
-            DrawChessPiece(chessPiecePicsList, chessPieceList, chessSize);
 
         }
     }
