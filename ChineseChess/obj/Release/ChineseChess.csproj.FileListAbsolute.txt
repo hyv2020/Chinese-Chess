@@ -9,3 +9,14 @@ C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Release\ChineseChess.c
 C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Release\ChineseChess.csproj.CoreCompileInputs.cache
 C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Release\ChineseChess.exe
 C:\Users\vian_\source\repos\ChineseChess\ChineseChess\obj\Release\ChineseChess.pdb
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\bin\Release\ChineseChess.exe.config
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\bin\Release\ChineseChess.exe
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\bin\Release\ChineseChess.pdb
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Release\ChineseChess.csproj.AssemblyReference.cache
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Release\ChineseChess.Game.resources
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Release\ChineseChess.MainMenu.resources
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Release\ChineseChess.Properties.Resources.resources
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Release\ChineseChess.csproj.GenerateResource.cache
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Release\ChineseChess.csproj.CoreCompileInputs.cache
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Release\ChineseChess.exe
+C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Release\ChineseChess.pdb
