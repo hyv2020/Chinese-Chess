@@ -56,7 +56,7 @@ namespace ChineseChess
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F);
             this.label1.Location = new System.Drawing.Point(388, 105);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(319, 52);
+            this.label1.Size = new System.Drawing.Size(318, 52);
             this.label1.TabIndex = 1;
             this.label1.Text = "Chinese Chess";
             // 
@@ -120,6 +120,7 @@ namespace ChineseChess
             this.Controls.Add(this.pictureBox1);
             this.Name = "MainMenu";
             this.Text = "Chinese Chess";
+            this.Load += new System.EventHandler(this.MainMenu_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
