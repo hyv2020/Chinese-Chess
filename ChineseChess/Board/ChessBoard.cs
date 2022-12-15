@@ -66,7 +66,29 @@ namespace ChineseChess
                 }
             }
         }
+        public IEnumerable<string> SaveGame()
+        {
+            List<string> saveData = new List<string>();
+            var allCellsInGroupsOfX = this.GetAllCellsInOneList().GroupBy(c=>c.Y);
+            foreach(var group in allCellsInGroupsOfX)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach(var cell in group)
+                {
+                    if(cell.ChessPiece is null)
+                    {
+                        sb.Append("0 ");
+                    }
+                    else
+                    {
+                        sb.Append($"{(int)cell.ChessPiece.Side}{(int)cell.ChessPiece.GetChessPieceType()} ");
+                    }
+                }
+                sb.Remove(sb.Length - 1, 1);
+                yield return sb.ToString();
+            }
 
+        }
         public IEnumerable<Cell> GetAllCellsInOneList()
         {
             return this.Cells.SelectMany(x => x);
@@ -74,6 +96,14 @@ namespace ChineseChess
         private IEnumerable<Cell> GetAllChessPieces()
         {
             return this.GetAllCellsInOneList().Where(y => y.ChessPiece != null);
+        }
+        public void ClearBoard()
+        {
+            var allChessPiece = this.GetAllChessPieces();
+            foreach(var chessPiece in allChessPiece)
+            {
+                chessPiece.RemoveChessPiece();
+            }
         }
         public void MoveChessPiece(Cell orgCell, Cell destCell)
         {

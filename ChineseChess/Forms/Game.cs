@@ -15,6 +15,9 @@ namespace ChineseChess
     {
         ChessBoard board;
         Side moveSide;
+        List<PictureBox> chessPiecePics = new List<PictureBox>();
+        int currentTurn = 1;
+        List<Turn> turnRecord = new List<Turn>();
         public Game()
         {
             InitializeComponent();
@@ -24,6 +27,7 @@ namespace ChineseChess
             this.AddAllToControl();
             this.RandomStart();
             this.UpdateTurnLabel();
+            this.SaveState();
         }
 
         private void Game_Load(object sender, EventArgs e)
@@ -120,15 +124,58 @@ namespace ChineseChess
                 }
             }
         }
+
         private void AddChessPieceInCellToControl(Cell cell)
         {
             if (cell.ChessPiece != null)
             {
                 this.Controls.Add(cell.ChessPiece.ChessPicture);
+                this.chessPiecePics.Add(cell.ChessPiece.ChessPicture);
                 AddedEventHandlerToObjs(cell.ChessPiece.ChessPicture, cell.ChessPiece);
             }
         }
-
+        private void LoadBoardSlate(ChessBoard chessBoard)
+        {
+            foreach (var col in chessBoard.Cells)
+            {
+                foreach (var cell in col)
+                {
+                    AddChessPieceInCellToControl(cell);
+                    SortCellImageOrder(cell);
+                }
+            }
+        }
+        private void AddTurnBoxItem(int turnNumber)
+        {
+            TurnBox.Items.Add($"Turn {turnNumber}");
+        }
+        private void SaveState()
+        {
+            this.turnRecord.Add(new Turn(currentTurn, this.moveSide, this.board.SaveGame().ToList()));
+            this.AddTurnBoxItem(this.currentTurn);
+        }
+        private void EndTurn()
+        {
+            TurnBox.Items.Clear();
+            for(int i =  1; i <= this.currentTurn; i++)
+            {
+                this.AddTurnBoxItem(i);
+            }
+            var currentTurn = this.turnRecord.FindIndex(x=>x.TurnNumber == this.currentTurn);
+            var updatedTurnRecord = this.turnRecord.Take(currentTurn + 1);
+            this.turnRecord = updatedTurnRecord.ToList();
+            this.currentTurn++;
+            this.SaveState();
+        }
+        private void ClearBoard()
+        {
+            foreach(var pic in this.chessPiecePics)
+            {
+                this.Controls.Remove(pic);
+            }
+            this.board.ClearBoard();
+            this.chessPiecePics.Clear();
+        }
         private void AddedEventHandlerToObjs<T>(PictureBox pictureBox, T obj)
         {
             var type = obj.ToString();
@@ -182,6 +229,7 @@ namespace ChineseChess
                     else
                     {
                         this.ChangeSide();
+                        this.EndTurn();
                         this.board.EnableMoveAblePieces(this.moveSide);
                         this.UpdateTurnLabel();
                     }
@@ -210,6 +258,26 @@ namespace ChineseChess
 
         private void ResetButton_Click(object sender, EventArgs e)
         {
+
+        }
+        private int GetTurnNumber(ComboBox turnBox)
+        {
+            return Convert.ToInt32(turnBox.SelectedItem.ToString().Split(' ').Last());
+        }
+        private void TurnBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.board.ClearAllSelection();
+            this.board.ClearAllValidMove();
+            var box = (ComboBox)sender;
+            int turnNumber = this.GetTurnNumber(box); 
+            var selectedTurn = this.turnRecord.Where(x => x.TurnNumber == turnNumber).FirstOrDefault();
+            this.ClearBoard();
+            this.board.LoadGame(selectedTurn.BoardState);
+            this.currentTurn = selectedTurn.TurnNumber;
+            this.moveSide = selectedTurn.WhosTurn;
+            this.LoadBoardSlate(this.board);
+            this.board.EnableMoveAblePieces(this.moveSide);
+            this.UpdateTurnLabel();
 
         }
     }
