@@ -31,6 +31,13 @@ namespace ChineseChess
                     throw new ArgumentOutOfRangeException(nameof(chessPieceType));
             }
         }
+        public static ChessPiece CloneChessPieceToNewLocation(int x, int y, ChessPiece oldPiece, ChessBoard chessBoard)
+        {
+            ChessPiece newPiece = CreateChessPiece(x, y, oldPiece.Side, oldPiece.GetChessPieceType(), chessBoard);
+            newPiece.Name = oldPiece.Name;
+            newPiece.ChessPicture.Name = oldPiece.ChessPicture.Name;
+            return newPiece;
+        }
         private static ChessPiece CreateSoldier(Side side, int x, int y, ChessBoard chessBoard)
         {
             return new Soldierv2(x, y, side, chessBoard);

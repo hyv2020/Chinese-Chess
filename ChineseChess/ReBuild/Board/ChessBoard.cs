@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace ChineseChess
 {
@@ -66,5 +67,104 @@ namespace ChineseChess
             }
         }
 
+        public IEnumerable<Cellv2> GetAllCellsInOneList()
+        {
+            return this.Cells.SelectMany(x => x);
+        }
+        private IEnumerable<Cellv2> GetAllChessPieces()
+        {
+            return this.GetAllCellsInOneList().Where(y => y.ChessPiece != null);
+        }
+        public void MoveChessPiece(Cellv2 orgCell, Cellv2 destCell)
+        {
+            destCell.MoveChessPiece(orgCell.ChessPiece, this);
+            orgCell.RemoveChessPiece();
+        }
+        public bool FindSelectedCell(out Cellv2 cell)
+        {
+            var allChessPiece = this.GetAllChessPieces();
+            var selectedPiece = allChessPiece.Single(x => x.ChessPiece.IsSelected == true);
+            if(this.FindSpecificCell(selectedPiece.X,selectedPiece.Y, out cell))
+            {
+                return true;
+            }
+            cell = null;
+            return false;
+        }
+        public bool FindSpecificCell(int x, int y, out Cellv2 cell)
+        {
+            if(x < 0 || y < 0 || x > GlobalPosition.BoardSizeX - 1 || y > GlobalPosition.BoardSizeY - 1)
+            {
+                cell = null;
+                return false;
+            }
+            try
+            {
+                var allCells = this.GetAllCellsInOneList();
+                cell = allCells.Single(c => c.X == x && c.Y == y);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public void EnableMoveAblePieces(Side side)
+        {
+            var allChessPieces = this.GetAllChessPieces();
+            foreach(var piece in allChessPieces)
+            {
+                if(piece.Side == side)
+                {
+                    piece.ChessPiece.CanMove = true;
+                }
+                else
+                {
+                    piece.ChessPiece.CanMove = false;
+                }
+            }
+        }
+        public bool CheckWinner(out Side side)
+        {
+            var allChessPieces = this.GetAllChessPieces();
+            var allGenerals = allChessPieces.Where(x => x.ChessPiece.GetChessPieceType() == ChessPieceType.General);
+            if(allGenerals.Count() < 2)
+            {
+                side = allGenerals.Select(g => g.Side).Single();
+                return true;
+            }
+            side = Side.Red;
+            return false;
+        }
+        public void ShowValidMoves(List<Point> validMovePositions)
+        {
+            var allCells = this.GetAllCellsInOneList();
+            foreach(var cell in allCells)
+            {
+                foreach (var move in validMovePositions)
+                {
+                    if(cell.X == move.X && cell.Y == move.Y)
+                    {
+                        cell.ValidMove.IsValidMove();
+                    }
+                }
+            }
+        }
+        public void ClearAllSelection()
+        {
+            var allChessPiece = this.GetAllChessPieces();
+            foreach(var piece in allChessPiece)
+            {
+                piece.ChessPiece.IsSelected = false;
+            }
+        }
+        public void ClearAllValidMove()
+        {
+            var allCells = this.GetAllCellsInOneList();
+            foreach(var cell in allCells)
+            {
+                cell.ValidMove.NotValidMove();
+            }
+        }
     }
 }

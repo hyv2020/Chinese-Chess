@@ -17,7 +17,70 @@ namespace ChineseChess
         }
         public override List<Point> FindValidMove(ChessBoard chessBoard)
         {
-            throw new NotImplementedException();
+            List<Cellv2> availableCells = new List<Cellv2>();
+            //x axis moves
+            //scan the whole axis
+            for (int i = this.X + 1; i < GlobalPosition.BoardSizeX; i++)
+            {
+                if (chessBoard.FindSpecificCell(i, this.Y, out var cell))
+                {
+                    if(cell.ChessPiece != null)
+                    {
+                        availableCells.Add(cell);
+                        break;
+                    }
+                    else
+                    {
+                        availableCells.Add(cell);
+                    }
+                }
+            }
+            for (int i = this.X - 1; i >= 0; i--)
+            {
+                if (chessBoard.FindSpecificCell(i, this.Y, out var cell))
+                {
+                    if (cell.ChessPiece != null)
+                    {
+                        availableCells.Add(cell);
+                        break;
+                    }
+                    else
+                    {
+                        availableCells.Add(cell);
+                    }
+                }
+            }
+            for (int i = this.Y + 1; i < GlobalPosition.BoardSizeY; i++)
+            {
+                if (chessBoard.FindSpecificCell(this.X, i, out var cell))
+                {
+                    if (cell.ChessPiece != null)
+                    {
+                        availableCells.Add(cell);
+                        break;
+                    }
+                    else
+                    {
+                        availableCells.Add(cell);
+                    }
+                }
+            }
+            for (int i = this.Y - 1; i >= 0; i--)
+            {
+                if (chessBoard.FindSpecificCell(this.X, i, out var cell))
+                {
+                    if (cell.ChessPiece != null)
+                    {
+                        availableCells.Add(cell);
+                        break;
+                    }
+                    else
+                    {
+                        availableCells.Add(cell);
+                    }
+                }
+            }
+            return FliterCellsToValidPoints(availableCells);
         }
     }
 }

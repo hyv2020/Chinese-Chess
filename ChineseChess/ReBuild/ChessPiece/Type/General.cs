@@ -17,7 +17,59 @@ namespace ChineseChess
         }
         public override List<Point> FindValidMove(ChessBoard chessBoard)
         {
-            throw new NotImplementedException();
+            List<Cellv2> availableCells = new List<Cellv2>();
+            if (chessBoard.FindSpecificCell(this.X - 1, this.Y, out var cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    availableCells.Add(cell);
+                }
+            }
+            if (chessBoard.FindSpecificCell(this.X, this.Y + 1, out cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    availableCells.Add(cell);
+                }
+            }
+            if (chessBoard.FindSpecificCell(this.X + 1, this.Y, out cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    availableCells.Add(cell);
+                }
+            }
+            if (chessBoard.FindSpecificCell(this.X, this.Y - 1, out cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    availableCells.Add(cell);
+                }
+            }
+            if(CheckFlyingGeneral(out cell, chessBoard))
+            {
+                availableCells.Add(cell);
+            }
+            return FliterCellsToValidPoints(availableCells);
+        }
+        private bool CheckFlyingGeneral(out Cellv2 cell, ChessBoard chessBoard)
+        {
+            for (int i = 0; i < GlobalPosition.BoardSizeY; i++)
+            {
+                if (i != this.Y && chessBoard.FindSpecificCell(this.X, i, out cell))
+                {
+                    if (cell.ChessPiece != null)
+                    {
+                        if (cell.ChessPiece.GetChessPieceType() == ChessPieceType.General)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            }
+            cell = null;
+            return false;
         }
     }
 }

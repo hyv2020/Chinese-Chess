@@ -15,9 +15,40 @@ namespace ChineseChess
         {
 
         }
+
         public override List<Point> FindValidMove(ChessBoard chessBoard)
         {
-            throw new NotImplementedException();
+            List<Cellv2> availableCells = new List<Cellv2>();
+
+            if (chessBoard.FindSpecificCell(this.X - 1, this.Y - 1, out var cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    availableCells.Add(cell);
+                }
+            }
+            if (chessBoard.FindSpecificCell(this.X + 1, this.Y - 1, out cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    availableCells.Add(cell);
+                }
+            }
+            if (chessBoard.FindSpecificCell(this.X - 1, this.Y + 1, out cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    availableCells.Add(cell);
+                }
+            }
+            if (chessBoard.FindSpecificCell(this.X + 1, this.Y + 1, out cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    availableCells.Add(cell);
+                }
+            }
+            return FliterCellsToValidPoints(availableCells);
         }
     }
 }

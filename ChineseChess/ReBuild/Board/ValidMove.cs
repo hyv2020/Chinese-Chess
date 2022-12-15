@@ -32,5 +32,9 @@ namespace ChineseChess
             isValid = false;
             ValidMovePicBox.Visible = false;
         }
+        public override string ToString()
+        {
+            return typeof(ValidMove).ToString();
+        }
     }
 }

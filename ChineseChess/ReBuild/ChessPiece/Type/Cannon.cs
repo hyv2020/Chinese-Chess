@@ -17,7 +17,106 @@ namespace ChineseChess
         }
         public override List<Point> FindValidMove(ChessBoard chessBoard)
         {
-            throw new NotImplementedException();
+            List<Cellv2> availableCells = new List<Cellv2>();
+            //x axis moves
+            //scan the whole axis
+            bool firstOccupied = false;
+            for(int i = this.X + 1; i < GlobalPosition.BoardSizeX; i++)
+            {
+                if(chessBoard.FindSpecificCell(i, this.Y, out var cell))
+                {
+                    if (!firstOccupied)
+                    {
+                        if (cell.ChessPiece != null)
+                        {
+                            firstOccupied = true;
+                            continue;
+                        }
+                        availableCells.Add(cell);
+                    }
+                    else
+                    {
+                        if(cell.ChessPiece != null)
+                        {
+                            availableCells.Add(cell);
+                            break;
+                        }
+                    }
+                }
+            }
+            firstOccupied = false;
+            for (int i = this.X - 1; i >= 0; i--)
+            {
+                if (chessBoard.FindSpecificCell(i, this.Y, out var cell))
+                {
+                    if (!firstOccupied)
+                    {
+                        if (cell.ChessPiece != null)
+                        {
+                            firstOccupied = true;
+                            continue;
+                        }
+                        availableCells.Add(cell);
+                    }
+                    else
+                    {
+                        if (cell.ChessPiece != null)
+                        {
+                            availableCells.Add(cell);
+                            break;
+                        }
+                    }
+                }
+            }
+            firstOccupied = false;
+            for (int i = this.Y + 1; i < GlobalPosition.BoardSizeY; i++)
+            {
+                if (chessBoard.FindSpecificCell(this.X, i, out var cell))
+                {
+                    if (!firstOccupied)
+                    {
+                        if (cell.ChessPiece != null)
+                        {
+                            firstOccupied = true;
+                            continue;
+                        }
+                        availableCells.Add(cell);
+                    }
+                    else
+                    {
+                        if (cell.ChessPiece != null)
+                        {
+                            availableCells.Add(cell);
+                            break;
+                        }
+                    }
+                }
+            }
+            firstOccupied = false;
+            for (int i = this.Y - 1; i >= 0; i--)
+            {
+                if (chessBoard.FindSpecificCell(this.X, i, out var cell))
+                {
+                    if (!firstOccupied)
+                    {
+                        if (cell.ChessPiece != null)
+                        {
+                            firstOccupied = true;
+                            continue;
+                        }
+                        availableCells.Add(cell);
+                    }
+                    else
+                    {
+                        if (cell.ChessPiece != null)
+                        {
+                            availableCells.Add(cell);
+                            break;
+                        }
+                    }
+                }
+            }
+            return FliterCellsToValidPoints(availableCells);
         }
     }
 }
