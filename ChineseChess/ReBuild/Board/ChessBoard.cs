@@ -130,7 +130,7 @@ namespace ChineseChess
             var allGenerals = allChessPieces.Where(x => x.ChessPiece.GetChessPieceType() == ChessPieceType.General);
             if(allGenerals.Count() < 2)
             {
-                side = allGenerals.Select(g => g.Side).Single();
+                side = allGenerals.Select(g => g.ChessPiece.Side).Single();
                 return true;
             }
             side = Side.Red;

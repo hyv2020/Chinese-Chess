@@ -13,6 +13,7 @@ namespace ChineseChess
     public partial class Form1 : Form
     {
         ChessBoard board;
+        Side moveSide;
         public Form1()
         {
             InitializeComponent();
@@ -24,6 +25,32 @@ namespace ChineseChess
         private void Form1_Load(object sender, EventArgs e)
         {
             
+        }
+        private void RandomStart()
+        {
+            Random playerStart = new Random();
+            //create random number between 0 and 10
+            int whoStart = playerStart.Next(10);
+            //red starts if smaller than 5, black starts if greater
+            if (whoStart < 5)
+            {
+                this.moveSide = Side.Red;
+            }
+            else
+            {
+                this.moveSide = Side.Black;
+            }
+        }
+        private void ChangeSide()
+        {
+            if(this.moveSide == Side.Red)
+            {
+                this.moveSide = Side.Black;
+            }
+            else
+            {
+                this.moveSide = Side.Red;
+            }
         }
         private void AddAllToControl()
         {
@@ -116,7 +143,15 @@ namespace ChineseChess
                     this.board.ClearAllSelection();
                     this.board.ClearAllValidMove();
                     this.SortCellImageOrder(cell);
-                    //this.board.CheckWinner(out Side winner);
+                    if(this.board.CheckWinner(out Side winner))
+                    {
+                        MessageBox.Show($"{winner} Side Wins");
+                    }
+                    else
+                    {
+                        this.ChangeSide();
+                        this.board.EnableMoveAblePieces(this.moveSide);
+                    }
                 }
             }
         }
@@ -127,9 +162,12 @@ namespace ChineseChess
             var allCells = this.board.GetAllCellsInOneList();
             var cellWithChessPiece = allCells.Where(x => x.ChessPiece != null);
             var currentCell = cellWithChessPiece.Single(x => x.ChessPiece.ChessPicture == (PictureBox)sender);
-            currentCell.ChessPiece.IsSelected = true;
-            var validMoves = currentCell.ChessPiece.FindValidMove(this.board);
-            this.board.ShowValidMoves(validMoves);
+            if(currentCell.ChessPiece.Side == this.moveSide)
+            {
+                currentCell.ChessPiece.IsSelected = true;
+                var validMoves = currentCell.ChessPiece.FindValidMove(this.board);
+                this.board.ShowValidMoves(validMoves);
+            }
         }
     }
 }
