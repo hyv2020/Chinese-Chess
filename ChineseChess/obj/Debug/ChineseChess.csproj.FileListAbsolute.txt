@@ -21,4 +21,3 @@ C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Debug\ChineseChes
 C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Debug\ChineseChess.pdb
 C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Debug\ChineseChess.csproj.AssemblyReference.cache
 C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Debug\ChineseChess.csproj.SuggestedBindingRedirects.cache
-C:\Users\vian_\Documents\GitHub\Chinese-Chess\ChineseChess\obj\Debug\ChineseChess.Form1.resources
