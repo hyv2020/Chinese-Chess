@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace ChineseChess
@@ -30,7 +27,7 @@ namespace ChineseChess
             this.IsSelected = false;
             this.CanMove = false;
         }
-        
+
         /// <summary>
         /// Constructor for moving piece while keeping the same name
         /// </summary>
@@ -54,7 +51,7 @@ namespace ChineseChess
         public abstract List<Point> FindValidMove(ChessBoard chessBoard);
         public List<Point> FliterCellsToValidPoints(IEnumerable<Cell> cells)
         {
-            var validateCells = cells.Where(c=>c.ChessPiece == null || this.Side != c.ChessPiece.Side);
+            var validateCells = cells.Where(c => c.ChessPiece == null || this.Side != c.ChessPiece.Side);
             return validateCells.Select(c => { return new Point(c.X, c.Y); }).ToList();
         }
         public override string ToString()

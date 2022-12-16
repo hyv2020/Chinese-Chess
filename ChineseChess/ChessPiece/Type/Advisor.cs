@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace ChineseChess
 {
     [ChessPieceAttr(ChessPieceType.Advisor)]
-    public class Advisor: ChessPiece
+    public class Advisor : ChessPiece
     {
-        public Advisor(int x, int y, Side side, ChessBoard chessBoard): base(x, y, side, chessBoard)
+        public Advisor(int x, int y, Side side, ChessBoard chessBoard) : base(x, y, side, chessBoard)
         {
 
         }

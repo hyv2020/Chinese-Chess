@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace ChineseChess
 {
     [ChessPieceAttr(ChessPieceType.Cannon)]
-    public class Cannon: ChessPiece
+    public class Cannon : ChessPiece
     {
-        public Cannon(int x, int y, Side side, ChessBoard chessBoard): base(x, y, side, chessBoard)
+        public Cannon(int x, int y, Side side, ChessBoard chessBoard) : base(x, y, side, chessBoard)
         {
 
         }
@@ -21,9 +16,9 @@ namespace ChineseChess
             //x axis moves
             //scan the whole axis
             bool firstOccupied = false;
-            for(int i = this.X + 1; i < GlobalVariables.BoardSizeX; i++)
+            for (int i = this.X + 1; i < GlobalVariables.BoardSizeX; i++)
             {
-                if(chessBoard.FindSpecificCell(i, this.Y, out var cell))
+                if (chessBoard.FindSpecificCell(i, this.Y, out var cell))
                 {
                     if (!firstOccupied)
                     {
@@ -36,7 +31,7 @@ namespace ChineseChess
                     }
                     else
                     {
-                        if(cell.ChessPiece != null)
+                        if (cell.ChessPiece != null)
                         {
                             availableCells.Add(cell);
                             break;

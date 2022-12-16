@@ -20,6 +20,7 @@ namespace ChineseChess
 
         private void QuitButton_Click(object sender, EventArgs e)
         {
+            UtilOps.ClearTempFolder();
             System.Windows.Forms.Application.Exit();
         }
 

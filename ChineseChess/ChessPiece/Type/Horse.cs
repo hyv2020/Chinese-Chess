@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace ChineseChess
 {
     [ChessPieceAttr(ChessPieceType.Horse)]
-    public class Horse: ChessPiece
+    public class Horse : ChessPiece
     {
 
-        public Horse(int x, int y, Side side, ChessBoard chessBoard): base(x, y, side, chessBoard)
+        public Horse(int x, int y, Side side, ChessBoard chessBoard) : base(x, y, side, chessBoard)
         {
 
         }
@@ -21,7 +16,7 @@ namespace ChineseChess
             List<Cell> availableCells = new List<Cell>();
             if (chessBoard.FindSpecificCell(this.X - 1, this.Y, out var occupiedCell))
             {
-                if(occupiedCell.ChessPiece == null)
+                if (occupiedCell.ChessPiece == null)
                 {
                     if (chessBoard.FindSpecificCell(this.X - 2, this.Y - 1, out var cell))
                     {
@@ -35,7 +30,7 @@ namespace ChineseChess
             }
             if (chessBoard.FindSpecificCell(this.X + 1, this.Y, out occupiedCell))
             {
-                if(occupiedCell.ChessPiece == null)
+                if (occupiedCell.ChessPiece == null)
                 {
                     if (chessBoard.FindSpecificCell(this.X + 2, this.Y - 1, out var cell))
                     {
@@ -61,7 +56,7 @@ namespace ChineseChess
                     }
                 }
             }
-            if(chessBoard.FindSpecificCell(this.X, this.Y - 1, out occupiedCell))
+            if (chessBoard.FindSpecificCell(this.X, this.Y - 1, out occupiedCell))
             {
                 if (occupiedCell.ChessPiece == null)
                 {

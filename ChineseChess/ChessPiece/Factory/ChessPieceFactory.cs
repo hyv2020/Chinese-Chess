@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
 
 namespace ChineseChess
 {
     public static class ChessPieceFactory
     {
-        public static ChessPiece CreateChessPiece(int x, int y, Side side, ChessPieceType chessPieceType, ChessBoard chessBoard )
+        public static ChessPiece CreateChessPiece(int x, int y, Side side, ChessPieceType chessPieceType, ChessBoard chessBoard)
         {
             switch (chessPieceType)
             {

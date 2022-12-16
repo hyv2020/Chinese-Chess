@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
-using System.Drawing;
 
 namespace ChineseChess
 {
@@ -21,7 +16,7 @@ namespace ChineseChess
 
         public static PictureBox DrawBoard(int x, int y)
         {
-            
+
             //show each cell as picturebox
             //make new picturebox call chessCell
             PictureBox boardCell = new PictureBox

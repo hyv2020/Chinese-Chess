@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Aspose.Zip;
+using Aspose.Zip.Saving;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using Aspose.Zip;
-using Aspose.Zip.Saving;
 
 namespace ChineseChess
 {
@@ -17,7 +16,7 @@ namespace ChineseChess
             {
                 using (Archive archive = new Archive(fs))
                 {
-                    foreach(var t in archive.Entries)
+                    foreach (var t in archive.Entries)
                     {
                         t.Extract(FilePaths.rootTempFilePath + t.Name);
                     }
@@ -37,7 +36,7 @@ namespace ChineseChess
         {
             string[] tempFilePaths = Directory.GetFiles(FilePaths.rootTempFilePath);
             var pathToDelete = tempFilePaths.Where(x => Convert.ToInt32(Path.GetFileNameWithoutExtension(x)) > turnNumber);
-            foreach(string filePath in pathToDelete)
+            foreach (string filePath in pathToDelete)
             {
                 File.Delete(filePath);
             }
@@ -53,10 +52,10 @@ namespace ChineseChess
         private static string CheckExistingSaveFile(string fileName, int? counter = null)
         {
             var allFiles = Directory.GetFiles(FilePaths.rootSaveFilePath);
-            var allExistingSaves = allFiles.Where(x => Path.GetExtension(x) == ".sav").Select(f=>Path.GetFileNameWithoutExtension(f)).ToArray();
-            if(allExistingSaves.Contains(fileName))
+            var allExistingSaves = allFiles.Where(x => Path.GetExtension(x) == ".sav").Select(f => Path.GetFileNameWithoutExtension(f)).ToArray();
+            if (allExistingSaves.Contains(fileName))
             {
-                if(counter is null)
+                if (counter is null)
                 {
                     counter = 2;
                     fileName = $"{fileName} ({counter})";
@@ -75,7 +74,7 @@ namespace ChineseChess
                 return fileName;
             }
         }
-        public static void SaveFile(string fileName, bool overWriteSave )
+        public static void SaveFile(string fileName, bool overWriteSave)
         {
             var tempDir = new DirectoryInfo(FilePaths.rootTempFilePath);
             var tempfiles = tempDir.GetFiles();
@@ -100,8 +99,8 @@ namespace ChineseChess
                         // Create ZIP archive
                         archive.Save(zipFile, new ArchiveSaveOptions() { Encoding = Encoding.ASCII });
                     }
-                    
-                }                
+
+                }
             }
 
         }
@@ -112,7 +111,7 @@ namespace ChineseChess
             List<string> boardState = new List<string>();
             string[] allLines = File.ReadAllLines(filePath);
             side = (Side)Enum.Parse(typeof(Side), allLines[0]);
-            for(int i = 1; i < allLines.Length; i++)
+            for (int i = 1; i < allLines.Length; i++)
             {
                 boardState.Add(allLines[i]);
             }

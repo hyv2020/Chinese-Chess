@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Drawing;
 
 namespace ChineseChess
 {
@@ -27,10 +25,10 @@ namespace ChineseChess
         public ChessBoard()
         {
             this.Cells = new List<List<Cell>>();
-            for(int x = 0; x < GlobalVariables.BoardSizeX; x++)
+            for (int x = 0; x < GlobalVariables.BoardSizeX; x++)
             {
                 List<Cell> column = new List<Cell>();
-                for(var y = 0; y < GlobalVariables.BoardSizeY; y++)
+                for (var y = 0; y < GlobalVariables.BoardSizeY; y++)
                 {
                     column.Add(new Cell(x, y));
                 }
@@ -39,16 +37,16 @@ namespace ChineseChess
         }
         public void LoadGame(List<string> matchData = null)
         {
-            matchData = matchData?? defaultStart;
+            matchData = matchData ?? defaultStart;
             List<List<string>> board = new List<List<string>>();
-            foreach(var row in matchData)
+            foreach (var row in matchData)
             {
                 List<string> rowData = row.Split(' ').ToList();
                 board.Add(rowData);
             }
-            for(int y = 0; y < board.Count; y++)
+            for (int y = 0; y < board.Count; y++)
             {
-                for(int x = 0; x < board[y].Count; x++)
+                for (int x = 0; x < board[y].Count; x++)
                 {
                     char[] cell = board[y][x].ToCharArray();
                     if (cell.Length > 1)
@@ -69,11 +67,11 @@ namespace ChineseChess
         public IEnumerable<string> SaveGame()
         {
             List<string> saveData = new List<string>();
-            var allCellsInGroupsOfX = this.GetAllCellsInOneList().GroupBy(c=>c.Y);
-            foreach(var group in allCellsInGroupsOfX)
+            var allCellsInGroupsOfX = this.GetAllCellsInOneList().GroupBy(c => c.Y);
+            foreach (var group in allCellsInGroupsOfX)
             {
                 StringBuilder sb = new StringBuilder();
-                foreach(var cell in group)
+                foreach (var cell in group)
                 {
                     sb.Append(cell.ToSaveCode() + " ");
                 }
@@ -92,7 +90,7 @@ namespace ChineseChess
         public void ClearBoard()
         {
             var allChessPiece = this.GetAllChessPieces();
-            foreach(var chessPiece in allChessPiece)
+            foreach (var chessPiece in allChessPiece)
             {
                 chessPiece.RemoveChessPiece();
             }
@@ -106,7 +104,7 @@ namespace ChineseChess
         {
             var allChessPiece = this.GetAllChessPieces();
             var selectedPiece = allChessPiece.Single(x => x.ChessPiece.IsSelected == true);
-            if(this.FindSpecificCell(selectedPiece.X,selectedPiece.Y, out cell))
+            if (this.FindSpecificCell(selectedPiece.X, selectedPiece.Y, out cell))
             {
                 return true;
             }
@@ -115,7 +113,7 @@ namespace ChineseChess
         }
         public bool FindSpecificCell(int x, int y, out Cell cell)
         {
-            if(x < 0 || y < 0 || x > GlobalVariables.BoardSizeX - 1 || y > GlobalVariables.BoardSizeY - 1)
+            if (x < 0 || y < 0 || x > GlobalVariables.BoardSizeX - 1 || y > GlobalVariables.BoardSizeY - 1)
             {
                 cell = null;
                 return false;
@@ -126,7 +124,7 @@ namespace ChineseChess
                 cell = allCells.Single(c => c.X == x && c.Y == y);
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -134,7 +132,7 @@ namespace ChineseChess
         public void DisableAllPieces()
         {
             var allChessPieces = this.GetAllChessPieces();
-            foreach(var piece in allChessPieces)
+            foreach (var piece in allChessPieces)
             {
                 piece.ChessPiece.CanMove = false;
             }
@@ -142,9 +140,9 @@ namespace ChineseChess
         public void EnableMoveAblePieces(Side side)
         {
             var allChessPieces = this.GetAllChessPieces();
-            foreach(var piece in allChessPieces)
+            foreach (var piece in allChessPieces)
             {
-                if(piece.Side == side)
+                if (piece.Side == side)
                 {
                     piece.ChessPiece.CanMove = true;
                 }
@@ -158,7 +156,7 @@ namespace ChineseChess
         {
             var allChessPieces = this.GetAllChessPieces();
             var allGenerals = allChessPieces.Where(x => x.ChessPiece.GetChessPieceType() == ChessPieceType.General);
-            if(allGenerals.Count() < 2)
+            if (allGenerals.Count() < 2)
             {
                 side = allGenerals.Select(g => g.ChessPiece.Side).Single();
                 return true;
@@ -169,11 +167,11 @@ namespace ChineseChess
         public void ShowValidMoves(List<Point> validMovePositions)
         {
             var allCells = this.GetAllCellsInOneList();
-            foreach(var cell in allCells)
+            foreach (var cell in allCells)
             {
                 foreach (var move in validMovePositions)
                 {
-                    if(cell.X == move.X && cell.Y == move.Y)
+                    if (cell.X == move.X && cell.Y == move.Y)
                     {
                         cell.ValidMove.IsValidMove();
                     }
@@ -183,7 +181,7 @@ namespace ChineseChess
         public void ClearAllSelection()
         {
             var allChessPiece = this.GetAllChessPieces();
-            foreach(var piece in allChessPiece)
+            foreach (var piece in allChessPiece)
             {
                 piece.ChessPiece.IsSelected = false;
             }
@@ -191,7 +189,7 @@ namespace ChineseChess
         public void ClearAllValidMove()
         {
             var allCells = this.GetAllCellsInOneList();
-            foreach(var cell in allCells)
+            foreach (var cell in allCells)
             {
                 cell.ValidMove.NotValidMove();
             }

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace ChineseChess
 {
     [ChessPieceAttr(ChessPieceType.General)]
-    public class General:ChessPiece
+    public class General : ChessPiece
     {
-        public General(int x, int y, Side side, ChessBoard chessBoard): base(x, y, side, chessBoard)
+        public General(int x, int y, Side side, ChessBoard chessBoard) : base(x, y, side, chessBoard)
         {
 
         }
@@ -46,7 +41,7 @@ namespace ChineseChess
                     availableCells.Add(cell);
                 }
             }
-            if(CheckFlyingGeneral(out cell, chessBoard))
+            if (CheckFlyingGeneral(out cell, chessBoard))
             {
                 availableCells.Add(cell);
             }

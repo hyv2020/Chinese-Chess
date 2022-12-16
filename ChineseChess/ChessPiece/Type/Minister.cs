@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace ChineseChess
 {
     [ChessPieceAttr(ChessPieceType.Minister)]
-    public class Minister: ChessPiece
+    public class Minister : ChessPiece
     {
-        public Minister(int x, int y, Side side, ChessBoard chessBoard): base(x, y, side, chessBoard)
+        public Minister(int x, int y, Side side, ChessBoard chessBoard) : base(x, y, side, chessBoard)
         {
 
         }

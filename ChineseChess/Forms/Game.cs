@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
-using System.IO;
+using System.Windows.Forms;
 
 namespace ChineseChess
 {
@@ -45,7 +41,7 @@ namespace ChineseChess
 
         private void Game_Load(object sender, EventArgs e)
         {
-            
+
         }
 
 
@@ -68,7 +64,7 @@ namespace ChineseChess
         }
         private void UpdateTurnLabel(Side? side = null)
         {
-            if(side != null)
+            if (side != null)
             {
                 if (side == Side.Red)
                 {
@@ -81,7 +77,7 @@ namespace ChineseChess
                 TurnLabel.Text = $"{side} Side WIns!!!";
                 return;
             }
-            if(this.moveSide == Side.Red)
+            if (this.moveSide == Side.Red)
             {
                 TurnLabel.ForeColor = Color.Red;
             }
@@ -109,7 +105,7 @@ namespace ChineseChess
         }
         private void AddAllTurnsToTurnBox()
         {
-            foreach(var turn in this.turnRecord)
+            foreach (var turn in this.turnRecord)
             {
                 this.AddTurnBoxItem(turn.TurnNumber);
             }
@@ -175,9 +171,9 @@ namespace ChineseChess
                 this.turnRecord = UtilOps.LoadSaveFile(saveFilePath).ToList();
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Failed to load save file",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Failed to load save file", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             var selectedTurn = this.turnRecord.Last();
             this.ClearBoard();
@@ -241,18 +237,18 @@ namespace ChineseChess
         private void EndTurn()
         {
             TurnBox.Items.Clear();
-            for(int i =  1; i <= this.currentTurn; i++)
+            for (int i = 1; i <= this.currentTurn; i++)
             {
                 this.AddTurnBoxItem(i);
             }
-            var currentTurn = this.turnRecord.FindIndex(x=>x.TurnNumber == this.currentTurn);
+            var currentTurn = this.turnRecord.FindIndex(x => x.TurnNumber == this.currentTurn);
             var updatedTurnRecord = this.turnRecord.Take(currentTurn + 1);
             this.turnRecord = updatedTurnRecord.ToList();
             this.currentTurn++;
         }
         private void ClearBoard()
         {
-            foreach(var pic in this.chessPiecePics)
+            foreach (var pic in this.chessPiecePics)
             {
                 this.Controls.Remove(pic);
             }
@@ -284,7 +280,7 @@ namespace ChineseChess
                 throw new Exception();
             }
         }
-        
+
         private void ChessBoard_Click(object sender, EventArgs e)
         {
             this.board.ClearAllValidMove();
@@ -380,7 +376,7 @@ namespace ChineseChess
             UtilOps.ClearTempFolder();
             this.board.ClearAllSelection();
             this.board.ClearAllValidMove();
-            this.turnRecord= this.turnRecord.Where(x => x.TurnNumber == 1).ToList();
+            this.turnRecord = this.turnRecord.Where(x => x.TurnNumber == 1).ToList();
             var selectedTurn = this.turnRecord.FirstOrDefault();
             this.ClearBoard();
             this.board.LoadGame(selectedTurn.BoardState);
@@ -398,10 +394,11 @@ namespace ChineseChess
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = FilePaths.rootSaveFilePath;
             openFileDialog.Title = GlobalVariables.LoadDialogTitle;
-            openFileDialog.Filter =GlobalVariables.LoadDialogFliter;
+            openFileDialog.Filter = GlobalVariables.LoadDialogFliter;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
+                UtilOps.ClearTempFolder();
                 string saveFileName = openFileDialog.FileName;
                 this.LoadSave(saveFileName);
                 TurnBox.Items.Clear();

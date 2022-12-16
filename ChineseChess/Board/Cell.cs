@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace ChineseChess
 {
@@ -14,16 +9,16 @@ namespace ChineseChess
         public int X { get { return this.x; } }
         public int Y { get { return this.y; } }
         private ChessPiece chessPiece;
-        public ChessPiece ChessPiece 
-        { 
-            get { return chessPiece; } 
+        public ChessPiece ChessPiece
+        {
+            get { return chessPiece; }
         }
         private Side side;
         public Side Side
         {
             get { return this.side; }
         }
-        private bool advisorArea =false;
+        private bool advisorArea = false;
         public bool AdvisorArea
         {
             get { return this.advisorArea; }
@@ -33,7 +28,7 @@ namespace ChineseChess
 
         public Cell(int x, int y)
         {
-            this.x = x; 
+            this.x = x;
             this.y = y;
             chessPiece = null;
             BoardPic = DrawBoardFunctions.DrawBoard(x, y);
@@ -50,7 +45,7 @@ namespace ChineseChess
         }
         public void MoveChessPiece(ChessPiece chessPiece, ChessBoard chessBoard)
         {
-            if(this.chessPiece != null)
+            if (this.chessPiece != null)
             {
                 this.RemoveChessPiece();
             }
@@ -70,7 +65,7 @@ namespace ChineseChess
         }
         public string ToSaveCode()
         {
-            if(this.chessPiece is null)
+            if (this.chessPiece is null)
             {
                 return "0";
             }

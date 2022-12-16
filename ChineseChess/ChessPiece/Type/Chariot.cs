@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace ChineseChess
 {
     [ChessPieceAttr(ChessPieceType.Chariot)]
-    public class Chariot: ChessPiece
+    public class Chariot : ChessPiece
     {
-        public Chariot(int x, int y, Side side, ChessBoard chessBoard): base(x, y, side, chessBoard)
+        public Chariot(int x, int y, Side side, ChessBoard chessBoard) : base(x, y, side, chessBoard)
         {
 
         }
@@ -24,7 +19,7 @@ namespace ChineseChess
             {
                 if (chessBoard.FindSpecificCell(i, this.Y, out var cell))
                 {
-                    if(cell.ChessPiece != null)
+                    if (cell.ChessPiece != null)
                     {
                         availableCells.Add(cell);
                         break;

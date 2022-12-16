@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Reflection;
 
 namespace ChineseChess
 {
@@ -13,10 +6,10 @@ namespace ChineseChess
 
     public static class ChessPieceMethods
     {
-        
+
         public static ChessPieceType GetChessPieceType(this ChessPiece chessPiece)
         {
-            if(chessPiece != null)
+            if (chessPiece != null)
             {
                 var chessType = chessPiece.GetType();
                 object[] attrs = Attribute.GetCustomAttributes(chessType);
@@ -36,5 +29,5 @@ namespace ChineseChess
             }
         }
     }
-    
+
 }
