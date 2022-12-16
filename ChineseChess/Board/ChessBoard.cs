@@ -75,19 +75,11 @@ namespace ChineseChess
                 StringBuilder sb = new StringBuilder();
                 foreach(var cell in group)
                 {
-                    if(cell.ChessPiece is null)
-                    {
-                        sb.Append("0 ");
-                    }
-                    else
-                    {
-                        sb.Append($"{(int)cell.ChessPiece.Side}{(int)cell.ChessPiece.GetChessPieceType()} ");
-                    }
+                    sb.Append(cell.ToSaveCode() + " ");
                 }
                 sb.Remove(sb.Length - 1, 1);
                 yield return sb.ToString();
             }
-
         }
         public IEnumerable<Cell> GetAllCellsInOneList()
         {

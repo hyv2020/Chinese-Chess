@@ -201,7 +201,7 @@ namespace ChineseChess
             }
             return fileName;
         }
-        private void AutoSave()
+        private void AutoSaveToFile()
         {
             if (AutoSaveBox.Checked)
             {
@@ -209,7 +209,10 @@ namespace ChineseChess
                 UtilOps.SaveFile(fileName, true);
             }
         }
-
+        private void DeleteTempFilesAfterThisTurn(int currentTurn)
+        {
+            UtilOps.DeleteTempFilesAfterTurn(currentTurn);
+        }
         #endregion
 
         #region State Management
@@ -246,7 +249,6 @@ namespace ChineseChess
             var updatedTurnRecord = this.turnRecord.Take(currentTurn + 1);
             this.turnRecord = updatedTurnRecord.ToList();
             this.currentTurn++;
-            this.SaveState();
         }
         private void ClearBoard()
         {
@@ -312,16 +314,17 @@ namespace ChineseChess
                         MessageBox.Show($"{winner} Side Wins", "We have a winner", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.board.DisableAllPieces();
                         this.UpdateTurnLabel(winner);
-                        this.AutoSave();
                     }
                     else
                     {
                         this.ChangeSide();
                         this.EndTurn();
+                        this.SaveState();
                         this.board.EnableMoveAblePieces(this.moveSide);
                         this.UpdateTurnLabel();
-                        this.AutoSave();
                     }
+                    this.DeleteTempFilesAfterThisTurn(this.currentTurn);
+                    this.AutoSaveToFile();
                 }
             }
         }

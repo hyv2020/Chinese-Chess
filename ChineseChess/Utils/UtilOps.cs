@@ -33,6 +33,15 @@ namespace ChineseChess
                 yield return CreateTurnFromFile(filePath);
             }
         }
+        public static void DeleteTempFilesAfterTurn(int turnNumber)
+        {
+            string[] tempFilePaths = Directory.GetFiles(FilePaths.rootTempFilePath);
+            var pathToDelete = tempFilePaths.Where(x => Convert.ToInt32(Path.GetFileNameWithoutExtension(x)) > turnNumber);
+            foreach(string filePath in pathToDelete)
+            {
+                File.Delete(filePath);
+            }
+        }
         public static void ClearTempFolder()
         {
             string[] tempFilePaths = Directory.GetFiles(FilePaths.rootTempFilePath);

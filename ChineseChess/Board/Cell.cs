@@ -68,5 +68,16 @@ namespace ChineseChess
         {
             return typeof(Cell).ToString();
         }
+        public string ToSaveCode()
+        {
+            if(this.chessPiece is null)
+            {
+                return "0";
+            }
+            else
+            {
+                return $"{(int)this.chessPiece.Side}{(int)this.chessPiece.GetChessPieceType()}";
+            }
+        }
     }
 }
