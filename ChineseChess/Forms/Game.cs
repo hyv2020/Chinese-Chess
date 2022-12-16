@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace ChineseChess
 {
@@ -18,22 +19,37 @@ namespace ChineseChess
         List<PictureBox> chessPiecePics = new List<PictureBox>();
         int currentTurn = 1;
         List<Turn> turnRecord = new List<Turn>();
-        public Game()
+        public Game(string loadFromFile = null)
         {
             InitializeComponent();
             //initialise the game
-            this.board = new ChessBoard();
-            this.board.LoadGame();
-            this.AddAllToControl();
-            this.RandomStart();
-            this.UpdateTurnLabel();
-            this.SaveState();
+            UtilOps.ClearTempFolder();
+            if (loadFromFile is null)
+            {
+                this.board = new ChessBoard();
+                this.board.LoadGame();
+                this.AddAllToControl();
+                this.RandomStart();
+                this.UpdateTurnLabel();
+                this.SaveState();
+            }
+            else
+            {
+                this.board = new ChessBoard();
+                this.AddCellsToControl();
+                this.LoadSave(loadFromFile);
+                this.AddAllTurnsToTurnBox();
+
+            }
         }
 
         private void Game_Load(object sender, EventArgs e)
         {
             
         }
+
+
+        #region Turn Management
         private void RandomStart()
         {
             Random playerStart = new Random();
@@ -87,6 +103,20 @@ namespace ChineseChess
                 this.moveSide = Side.Red;
             }
         }
+        private void AddTurnBoxItem(int turnNumber)
+        {
+            TurnBox.Items.Add($"Turn {turnNumber}");
+        }
+        private void AddAllTurnsToTurnBox()
+        {
+            foreach(var turn in this.turnRecord)
+            {
+                this.AddTurnBoxItem(turn.TurnNumber);
+            }
+        }
+        #endregion
+
+        #region Controls
         private void AddAllToControl()
         {
             foreach (var col in this.board.Cells)
@@ -134,6 +164,47 @@ namespace ChineseChess
                 AddedEventHandlerToObjs(cell.ChessPiece.ChessPicture, cell.ChessPiece);
             }
         }
+        #endregion
+
+        #region File Management
+
+        private void LoadSave(string saveFilePath)
+        {
+            this.turnRecord = UtilOps.LoadSaveFile(saveFilePath).ToList();
+            var selectedTurn = this.turnRecord.Last();
+            this.ClearBoard();
+            this.board.LoadGame(selectedTurn.BoardState);
+            this.currentTurn = selectedTurn.TurnNumber;
+            this.moveSide = selectedTurn.WhosTurn;
+            this.LoadBoardSlate(this.board);
+            this.board.EnableMoveAblePieces(this.moveSide);
+            this.UpdateTurnLabel();
+        }
+        private string GetSaveFileName()
+        {
+            string fileName;
+            if (SaveFileNameTextBox.Text == "")
+            {
+                fileName = $"GameSave";
+            }
+            else
+            {
+                fileName = $"{SaveFileNameTextBox.Text}";
+            }
+            return fileName;
+        }
+        private void AutoSave()
+        {
+            if (AutoSaveBox.Checked)
+            {
+                string fileName = GetSaveFileName();
+                UtilOps.SaveFile(fileName, true);
+            }
+        }
+
+        #endregion
+
+        #region State Management
         private void LoadBoardSlate(ChessBoard chessBoard)
         {
             foreach (var col in chessBoard.Cells)
@@ -145,15 +216,17 @@ namespace ChineseChess
                 }
             }
         }
-        private void AddTurnBoxItem(int turnNumber)
-        {
-            TurnBox.Items.Add($"Turn {turnNumber}");
-        }
+
         private void SaveState()
         {
-            this.turnRecord.Add(new Turn(currentTurn, this.moveSide, this.board.SaveGame().ToList()));
+            Turn currentTurnState = new Turn(this.currentTurn, this.moveSide, this.board.SaveGame().ToList());
+            currentTurnState.SaveTurnToFile();
+            this.turnRecord.Add(currentTurnState);
             this.AddTurnBoxItem(this.currentTurn);
         }
+
+        #endregion
+
         private void EndTurn()
         {
             TurnBox.Items.Clear();
@@ -176,6 +249,8 @@ namespace ChineseChess
             this.board.ClearBoard();
             this.chessPiecePics.Clear();
         }
+
+        #region Events and Handler
         private void AddedEventHandlerToObjs<T>(PictureBox pictureBox, T obj)
         {
             var type = obj.ToString();
@@ -194,8 +269,12 @@ namespace ChineseChess
             {
                 pictureBox.Click += new EventHandler((sender, e) => ValidMove_Click(sender, e));
             }
+            else
+            {
+                throw new Exception();
+            }
         }
-
+        
         private void ChessBoard_Click(object sender, EventArgs e)
         {
             this.board.ClearAllValidMove();
@@ -225,6 +304,7 @@ namespace ChineseChess
                         MessageBox.Show($"{winner} Side Wins");
                         this.board.DisableAllPieces();
                         this.UpdateTurnLabel(winner);
+                        this.AutoSave();
                     }
                     else
                     {
@@ -232,6 +312,7 @@ namespace ChineseChess
                         this.EndTurn();
                         this.board.EnableMoveAblePieces(this.moveSide);
                         this.UpdateTurnLabel();
+                        this.AutoSave();
                     }
                 }
             }
@@ -253,13 +334,10 @@ namespace ChineseChess
         //quit game
         private void QuitButton_Click(object sender, EventArgs e)
         {
+            UtilOps.ClearTempFolder();
             System.Windows.Forms.Application.Exit();
         }
 
-        private void ResetButton_Click(object sender, EventArgs e)
-        {
-
-        }
         private int GetTurnNumber(ComboBox turnBox)
         {
             return Convert.ToInt32(turnBox.SelectedItem.ToString().Split(' ').Last());
@@ -269,7 +347,7 @@ namespace ChineseChess
             this.board.ClearAllSelection();
             this.board.ClearAllValidMove();
             var box = (ComboBox)sender;
-            int turnNumber = this.GetTurnNumber(box); 
+            int turnNumber = GetTurnNumber(box);
             var selectedTurn = this.turnRecord.Where(x => x.TurnNumber == turnNumber).FirstOrDefault();
             this.ClearBoard();
             this.board.LoadGame(selectedTurn.BoardState);
@@ -278,7 +356,49 @@ namespace ChineseChess
             this.LoadBoardSlate(this.board);
             this.board.EnableMoveAblePieces(this.moveSide);
             this.UpdateTurnLabel();
-
         }
+
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            string fileName = GetSaveFileName();
+            UtilOps.SaveFile(fileName, false);
+        }
+
+        private void RestartButton_Click(object sender, EventArgs e)
+        {
+            UtilOps.ClearTempFolder();
+            this.board.ClearAllSelection();
+            this.board.ClearAllValidMove();
+            this.turnRecord= this.turnRecord.Where(x => x.TurnNumber == 1).ToList();
+            var selectedTurn = this.turnRecord.FirstOrDefault();
+            this.ClearBoard();
+            this.board.LoadGame(selectedTurn.BoardState);
+            this.currentTurn = selectedTurn.TurnNumber;
+            this.moveSide = selectedTurn.WhosTurn;
+            this.LoadBoardSlate(this.board);
+            this.board.EnableMoveAblePieces(this.moveSide);
+            this.UpdateTurnLabel();
+            TurnBox.Items.Clear();
+            this.SaveState();
+        }
+
+        private void LoadButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = FilePaths.rootSaveFilePath;
+            openFileDialog.Title = "Load Save Files";
+            openFileDialog.Filter = "sav files (*.sav)|*.txt|All files (*.*)|*.*";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string saveFileName = openFileDialog.FileName;
+                this.LoadSave(saveFileName);
+                TurnBox.Items.Clear();
+                this.AddAllTurnsToTurnBox();
+            }
+        }
+
+        #endregion
+
     }
 }

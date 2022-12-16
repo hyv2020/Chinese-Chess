@@ -36,6 +36,11 @@ namespace ChineseChess
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.TurnBox = new System.Windows.Forms.ComboBox();
+            this.RestartButton = new System.Windows.Forms.Button();
+            this.SaveButton = new System.Windows.Forms.Button();
+            this.SaveFileNameTextBox = new System.Windows.Forms.TextBox();
+            this.AutoSaveBox = new System.Windows.Forms.CheckBox();
+            this.LoadButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // QuitButton
@@ -93,15 +98,67 @@ namespace ChineseChess
             this.TurnBox.FormattingEnabled = true;
             this.TurnBox.Location = new System.Drawing.Point(917, 309);
             this.TurnBox.Name = "TurnBox";
-            this.TurnBox.Size = new System.Drawing.Size(121, 24);
+            this.TurnBox.Size = new System.Drawing.Size(231, 24);
             this.TurnBox.TabIndex = 10;
             this.TurnBox.SelectedIndexChanged += new System.EventHandler(this.TurnBox_SelectedIndexChanged);
+            // 
+            // RestartButton
+            // 
+            this.RestartButton.Location = new System.Drawing.Point(919, 597);
+            this.RestartButton.Name = "RestartButton";
+            this.RestartButton.Size = new System.Drawing.Size(229, 64);
+            this.RestartButton.TabIndex = 11;
+            this.RestartButton.Text = "Restart";
+            this.RestartButton.UseVisualStyleBackColor = true;
+            this.RestartButton.Click += new System.EventHandler(this.RestartButton_Click);
+            // 
+            // SaveButton
+            // 
+            this.SaveButton.Location = new System.Drawing.Point(919, 457);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(229, 64);
+            this.SaveButton.TabIndex = 12;
+            this.SaveButton.Text = "Save";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            // 
+            // SaveFileNameTextBox
+            // 
+            this.SaveFileNameTextBox.Location = new System.Drawing.Point(917, 409);
+            this.SaveFileNameTextBox.Name = "SaveFileNameTextBox";
+            this.SaveFileNameTextBox.Size = new System.Drawing.Size(231, 22);
+            this.SaveFileNameTextBox.TabIndex = 13;
+            // 
+            // AutoSaveBox
+            // 
+            this.AutoSaveBox.AutoSize = true;
+            this.AutoSaveBox.Location = new System.Drawing.Point(917, 383);
+            this.AutoSaveBox.Name = "AutoSaveBox";
+            this.AutoSaveBox.Size = new System.Drawing.Size(91, 20);
+            this.AutoSaveBox.TabIndex = 14;
+            this.AutoSaveBox.Text = "Auto Save";
+            this.AutoSaveBox.UseVisualStyleBackColor = true;
+            // 
+            // LoadButton
+            // 
+            this.LoadButton.Location = new System.Drawing.Point(919, 527);
+            this.LoadButton.Name = "LoadButton";
+            this.LoadButton.Size = new System.Drawing.Size(229, 64);
+            this.LoadButton.TabIndex = 15;
+            this.LoadButton.Text = "Load Save";
+            this.LoadButton.UseVisualStyleBackColor = true;
+            this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
             // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1262, 977);
+            this.Controls.Add(this.LoadButton);
+            this.Controls.Add(this.AutoSaveBox);
+            this.Controls.Add(this.SaveFileNameTextBox);
+            this.Controls.Add(this.SaveButton);
+            this.Controls.Add(this.RestartButton);
             this.Controls.Add(this.TurnBox);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -125,5 +182,10 @@ namespace ChineseChess
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox TurnBox;
+        private System.Windows.Forms.Button RestartButton;
+        private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.TextBox SaveFileNameTextBox;
+        private System.Windows.Forms.CheckBox AutoSaveBox;
+        private System.Windows.Forms.Button LoadButton;
     }
 }
