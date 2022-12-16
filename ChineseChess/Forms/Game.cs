@@ -170,7 +170,15 @@ namespace ChineseChess
 
         private void LoadSave(string saveFilePath)
         {
-            this.turnRecord = UtilOps.LoadSaveFile(saveFilePath).ToList();
+            try
+            {
+                this.turnRecord = UtilOps.LoadSaveFile(saveFilePath).ToList();
+
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Failed to load save file",MessageBoxButtons.OK,MessageBoxIcon.Error);
+            }
             var selectedTurn = this.turnRecord.Last();
             this.ClearBoard();
             this.board.LoadGame(selectedTurn.BoardState);
@@ -301,7 +309,7 @@ namespace ChineseChess
                     this.SortCellImageOrder(cell);
                     if (this.board.CheckWinner(out Side winner))
                     {
-                        MessageBox.Show($"{winner} Side Wins");
+                        MessageBox.Show($"{winner} Side Wins", "We have a winner", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.board.DisableAllPieces();
                         this.UpdateTurnLabel(winner);
                         this.AutoSave();
