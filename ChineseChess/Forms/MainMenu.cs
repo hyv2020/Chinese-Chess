@@ -37,8 +37,8 @@ namespace ChineseChess
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = FilePaths.rootSaveFilePath;
-            openFileDialog.Title = "Load Save Files";
-            openFileDialog.Filter = "sav files (*.sav)|*.txt|All files (*.*)|*.*";
+            openFileDialog.Title = GlobalVariables.LoadDialogTitle;
+            openFileDialog.Filter = GlobalVariables.LoadDialogFliter;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
