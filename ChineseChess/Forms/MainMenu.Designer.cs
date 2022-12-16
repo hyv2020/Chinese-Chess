@@ -36,6 +36,7 @@ namespace ChineseChess
             this.StartButton = new System.Windows.Forms.Button();
             this.RulesButton = new System.Windows.Forms.Button();
             this.QuitButton = new System.Windows.Forms.Button();
+            this.LoadButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -86,7 +87,7 @@ namespace ChineseChess
             // RulesButton
             // 
             this.RulesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
-            this.RulesButton.Location = new System.Drawing.Point(48, 228);
+            this.RulesButton.Location = new System.Drawing.Point(48, 450);
             this.RulesButton.Name = "RulesButton";
             this.RulesButton.Size = new System.Drawing.Size(277, 89);
             this.RulesButton.TabIndex = 4;
@@ -97,13 +98,24 @@ namespace ChineseChess
             // QuitButton
             // 
             this.QuitButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
-            this.QuitButton.Location = new System.Drawing.Point(48, 489);
+            this.QuitButton.Location = new System.Drawing.Point(48, 545);
             this.QuitButton.Name = "QuitButton";
             this.QuitButton.Size = new System.Drawing.Size(277, 89);
             this.QuitButton.TabIndex = 5;
             this.QuitButton.Text = "Quit Program";
             this.QuitButton.UseVisualStyleBackColor = true;
             this.QuitButton.Click += new System.EventHandler(this.QuitButton_Click);
+            // 
+            // LoadButton
+            // 
+            this.LoadButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.LoadButton.Location = new System.Drawing.Point(48, 186);
+            this.LoadButton.Name = "LoadButton";
+            this.LoadButton.Size = new System.Drawing.Size(277, 89);
+            this.LoadButton.TabIndex = 6;
+            this.LoadButton.Text = "Load Game";
+            this.LoadButton.UseVisualStyleBackColor = true;
+            this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
             // 
             // MainMenu
             // 
@@ -112,6 +124,7 @@ namespace ChineseChess
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1262, 673);
+            this.Controls.Add(this.LoadButton);
             this.Controls.Add(this.QuitButton);
             this.Controls.Add(this.RulesButton);
             this.Controls.Add(this.StartButton);
@@ -136,6 +149,7 @@ namespace ChineseChess
         private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.Button RulesButton;
         private System.Windows.Forms.Button QuitButton;
+        private System.Windows.Forms.Button LoadButton;
     }
 }
 

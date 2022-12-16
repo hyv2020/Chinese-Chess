@@ -12,7 +12,6 @@ namespace ChineseChess
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            //Form1 newGame = new Form1();
             Game newGame = new Game();
             newGame.Show();
             this.Visible = false;
@@ -32,6 +31,22 @@ namespace ChineseChess
         private void MainMenu_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void LoadButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = FilePaths.rootSaveFilePath;
+            openFileDialog.Title = GlobalVariables.LoadDialogTitle;
+            openFileDialog.Filter = GlobalVariables.LoadDialogFliter;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string saveFileName = openFileDialog.FileName;
+                Game newGame = new Game(saveFileName);
+                newGame.Show();
+                this.Visible = false;
+            }
         }
     }
 }
