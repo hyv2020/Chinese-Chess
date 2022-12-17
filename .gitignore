@@ -1,2 +1,7 @@
 
+/ChineseChess/obj/
+/ChineseChess/bin/
+
 *.vsidx
+/ChineseChess/v17/
+.vs/ChineseChess/v17/.suo
