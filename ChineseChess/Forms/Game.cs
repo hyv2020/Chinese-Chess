@@ -368,9 +368,30 @@ namespace ChineseChess
         private void SaveButton_Click(object sender, EventArgs e)
         {
             string fileName = GetSaveFileName();
-            UtilOps.SaveFile(fileName, false);
+            if(System.IO.File.Exists(FilePaths.rootSaveFilePath + fileName + ".sav"))
+            {
+                var overwrite = MessageBox.Show("Save file exist. Overwrite existing file?", "Overwrite file", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (overwrite == DialogResult.Yes)
+                {
+                    UtilOps.SaveFile(fileName, true);
+                    SaveGameMessage();
+                }
+                else if(overwrite == DialogResult.No)
+                {
+                    UtilOps.SaveFile(fileName, false); 
+                    SaveGameMessage();
+                }
+            }
+            else
+            {
+                UtilOps.SaveFile(fileName, false);
+                SaveGameMessage();
+            }
         }
-
+        private void SaveGameMessage()
+        {
+            MessageBox.Show("Game saved", "Game saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
         private void RestartButton_Click(object sender, EventArgs e)
         {
             UtilOps.ClearTempFolder();
