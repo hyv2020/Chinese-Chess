@@ -43,7 +43,7 @@ namespace ChineseChess
         {
             this.chessPiece = ChessPieceFactory.CreateChessPiece(this.X, this.Y, side, chessPieceType, chessBoard);
         }
-        public void MoveChessPiece(ChessPiece chessPiece, ChessBoard chessBoard)
+        public void ReplaceChessPiece(ChessPiece chessPiece, ChessBoard chessBoard)
         {
             if (this.chessPiece != null)
             {
