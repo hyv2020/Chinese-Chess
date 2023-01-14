@@ -17,8 +17,10 @@ namespace ChineseChess
         List<Turn> turnRecord = new List<Turn>();
         public Game(string loadFromFile = null)
         {
+
             InitializeComponent();
             //initialise the game
+            UtilOps.CheckSaveDirectory();
             UtilOps.ClearTempFolder();
             if (loadFromFile is null)
             {

@@ -10,6 +10,13 @@ namespace ChineseChess
 {
     public static class UtilOps
     {
+        public static void CheckSaveDirectory()
+        {
+            if (!Directory.Exists(FilePaths.rootTempFilePath))
+            {
+                Directory.CreateDirectory(FilePaths.rootTempFilePath);
+            }
+        }
         public static IEnumerable<Turn> LoadSaveFile(string saveFilePath)
         {
             using (FileStream fs = File.OpenRead(saveFilePath))

@@ -97,7 +97,7 @@ namespace ChineseChess
         }
         public void MoveChessPiece(Cell orgCell, Cell destCell)
         {
-            destCell.MoveChessPiece(orgCell.ChessPiece, this);
+            destCell.ReplaceChessPiece(orgCell.ChessPiece, this);
             orgCell.RemoveChessPiece();
         }
         public bool FindSelectedCell(out Cell cell)
