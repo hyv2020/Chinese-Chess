@@ -48,11 +48,11 @@ namespace ChineseChess
         {
             this.ChessPicture.Dispose();
         }
-        public abstract List<Point> FindValidMove(ChessBoard chessBoard);
-        public List<Point> FliterCellsToValidPoints(IEnumerable<Cell> cells)
+        public abstract IEnumerable<Cell> FindValidMove(ChessBoard chessBoard);
+        public IEnumerable<Cell> FliterCellsToValidPoints(IEnumerable<Cell> cells)
         {
             var validateCells = cells.Where(c => c.ChessPiece == null || this.Side != c.ChessPiece.Side);
-            return validateCells.Select(c => { return new Point(c.X, c.Y); }).ToList();
+            return validateCells;
         }
         public override string ToString()
         {

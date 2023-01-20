@@ -11,7 +11,7 @@ namespace ChineseChess
         {
 
         }
-        public override List<Point> FindValidMove(ChessBoard chessBoard)
+        public override IEnumerable<Cell> FindValidMove(ChessBoard chessBoard)
         {
             List<Cell> availableCells = new List<Cell>();
             if (chessBoard.FindSpecificCell(this.X - 1, this.Y, out var occupiedCell))
