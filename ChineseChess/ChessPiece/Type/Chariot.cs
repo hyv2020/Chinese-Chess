@@ -10,7 +10,7 @@ namespace ChineseChess
         {
 
         }
-        public override List<Point> FindValidMove(ChessBoard chessBoard)
+        public override IEnumerable<Cell> FindValidMove(ChessBoard chessBoard)
         {
             List<Cell> availableCells = new List<Cell>();
             //x axis moves

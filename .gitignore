@@ -7,3 +7,10 @@
 .vs/ChineseChess/v17/.suo
 *.exe
 *.pdb
+
+packages
+bin
+obj
+*.bak
+
+

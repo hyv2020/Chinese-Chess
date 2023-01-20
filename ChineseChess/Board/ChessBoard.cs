@@ -164,18 +164,11 @@ namespace ChineseChess
             side = Side.Red;
             return false;
         }
-        public void ShowValidMoves(List<Point> validMovePositions)
+        public void ShowValidMoves(IEnumerable<Cell> validMovePositions)
         {
-            var allCells = this.GetAllCellsInOneList();
-            foreach (var cell in allCells)
+            foreach(var cell in validMovePositions)
             {
-                foreach (var move in validMovePositions)
-                {
-                    if (cell.X == move.X && cell.Y == move.Y)
-                    {
-                        cell.ValidMove.IsValidMove();
-                    }
-                }
+                cell.ValidMove.IsValidMove();
             }
         }
         public void ClearAllSelection()
