@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Net;
 
 namespace ChineseChess
 {
@@ -49,22 +50,52 @@ namespace ChineseChess
         }
         private bool CheckFlyingGeneral(out Cell cell, ChessBoard chessBoard)
         {
-            for (int i = 0; i < GlobalVariables.BoardSizeY; i++)
+            if (this.Side== Side.Red) 
             {
-                if (i != this.Y && chessBoard.FindSpecificCell(this.X, i, out cell))
+                for (int i = this.Y; i >= 0; i--)
                 {
-                    if (cell.ChessPiece != null)
+                    if (i != this.Y && chessBoard.FindSpecificCell(this.X, i, out cell))
                     {
-                        if (cell.ChessPiece.GetChessPieceType() == ChessPieceType.General)
+                        if (cell.ChessPiece != null)
                         {
-                            return true;
+                            if (cell.ChessPiece.GetChessPieceType() == ChessPieceType.General)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
                         }
-                        return false;
+                        continue;
                     }
                 }
             }
+            else
+            {
+                for (int i = this.Y; i < GlobalVariables.BoardSizeY; i++)
+                {
+                    if (i != this.Y && chessBoard.FindSpecificCell(this.X, i, out cell))
+                    {
+                        if (cell.ChessPiece != null)
+                        {
+                            if (cell.ChessPiece.GetChessPieceType() == ChessPieceType.General)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        continue;
+                    }
+                }
+            }
+            
             cell = null;
             return false;
         }
+      
     }
 }
