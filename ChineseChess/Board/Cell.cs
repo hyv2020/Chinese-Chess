@@ -34,7 +34,7 @@ namespace ChineseChess
             BoardPic = DrawBoardFunctions.DrawBoard(x, y);
             side = (y > 4) ? Side.Red : Side.Black;
             ValidMove = new ValidMove(x, y);
-            if ((x < 6 && x > 2) && (y < 3 || y > GlobalVariables.BoardSizeY - 3))
+            if ((x < 6 && x > 2) && (y < 3 || y > GlobalVariables.BoardSizeY - 4))
             {
                 this.advisorArea = true;
             }
