@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using GameServer;
 using GameClient;
+using System.Threading.Tasks;
 
 namespace ChineseChess
 {
@@ -52,11 +53,23 @@ namespace ChineseChess
             }
         }
 
-        private void networkModeButton_Click(object sender, EventArgs e)
+        private void NetworkModeButton_Click(object sender, EventArgs e)
         {
-            AsynchronousSocketListener.StartListening();
-            AsynchronousClient.StartClient();
+            RunServerAndClient().RunSynchronously();
 
+        }
+        private async Task RunServerAndClient()
+        {
+            try
+            {
+                Task server = Task.Run(() => AsynchronousSocketListener.StartListening());
+                Task client = Task.Run(() => AsynchronousClient.StartClient());
+                Task.WaitAll(server);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

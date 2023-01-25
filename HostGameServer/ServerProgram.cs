@@ -59,6 +59,7 @@ namespace GameServer
             {
                 Debug.WriteLine(e.ToString());
             }
+            // run this after connecting to a client
 
             Debug.WriteLine("\nPress ENTER to continue...");
             //Console.Read();
