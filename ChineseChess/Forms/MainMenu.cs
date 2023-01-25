@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using GameServer;
+using GameClient;
 
 namespace ChineseChess
 {
@@ -13,7 +15,7 @@ namespace ChineseChess
         private void StartButton_Click(object sender, EventArgs e)
         {
             Game newGame = new Game();
-            newGame.Show();
+            newGame.Show();            
             this.Visible = false;
 
         }
@@ -48,6 +50,13 @@ namespace ChineseChess
                 newGame.Show();
                 this.Visible = false;
             }
+        }
+
+        private void networkModeButton_Click(object sender, EventArgs e)
+        {
+            AsynchronousSocketListener.StartListening();
+            AsynchronousClient.StartClient();
+
         }
     }
 }
