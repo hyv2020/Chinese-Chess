@@ -118,14 +118,14 @@ namespace ChineseChess
             this.LoadButton.UseVisualStyleBackColor = true;
             this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
             // 
-            // networkModeButton
+            // NetworkModeButton
             // 
             this.NetworkModeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
             this.NetworkModeButton.Location = new System.Drawing.Point(48, 281);
-            this.NetworkModeButton.Name = "networkModeButton";
+            this.NetworkModeButton.Name = "NetworkModeButton";
             this.NetworkModeButton.Size = new System.Drawing.Size(277, 89);
             this.NetworkModeButton.TabIndex = 7;
-            this.NetworkModeButton.Text = "Network Mode";
+            this.NetworkModeButton.Text = "Network Game";
             this.NetworkModeButton.UseVisualStyleBackColor = true;
             this.NetworkModeButton.Click += new System.EventHandler(this.NetworkModeButton_Click);
             // 

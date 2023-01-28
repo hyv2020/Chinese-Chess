@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -166,7 +165,7 @@ namespace ChineseChess
         }
         public void ShowValidMoves(IEnumerable<Cell> validMovePositions)
         {
-            foreach(var cell in validMovePositions)
+            foreach (var cell in validMovePositions)
             {
                 cell.ValidMove.IsValidMove();
             }

@@ -1,161 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NetworkCommons;
+using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using NetworkCommons;
-using System.Diagnostics;
+using System.Text;
 
 namespace GameServer
-{ 
-    public class AsynchronousSocketListener
+{
+    public class AsynchronousTCPListener
     {
-        // Thread signal.  
-        public static ManualResetEvent allDone = new ManualResetEvent(false);
 
-        public AsynchronousSocketListener()
+        public AsynchronousTCPListener()
         {
-        }
-
-        public static void StartListening()
-        {
-            // Establish the local endpoint for the socket.  
-            // The DNS name of the computer  
-            // running the listener is "host.contoso.com".  
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, Ports.remotePort);
-
-            // Create a TCP/IP socket.  
-            Socket listener = new Socket(ipAddress.AddressFamily,
-                SocketType.Stream, ProtocolType.Tcp);
-
-            // Bind the socket to the local endpoint and listen for incoming connections.  
-            try
-            {
-                listener.Bind(localEndPoint);
-                listener.Listen(100);
-
-                while (true)
-                {
-                    // Set the event to nonsignaled state.  
-                    allDone.Reset();
-
-                    // Start an asynchronous socket to listen for connections.  
-                    Debug.WriteLine("Waiting for a connection...");
-                    listener.BeginAccept(
-                        new AsyncCallback(AcceptCallback),
-                        listener);
-
-                    // Wait until a connection is made before continuing.  
-                    allDone.WaitOne();
-                }
-
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.ToString());
-            }
-            // run this after connecting to a client
-
-            Debug.WriteLine("\nPress ENTER to continue...");
-            //Console.Read();
 
         }
+        TcpListener server = new TcpListener(IPAddress.Any, Ports.remotePort);
 
-        public static void AcceptCallback(IAsyncResult ar)
+        public void StartListening()
         {
-            // Signal the main thread to continue.  
-            allDone.Set();
+            ServerStart();  //starting the server
 
-            // Get the socket that handles the client request.  
-            Socket listener = (Socket)ar.AsyncState;
-            Socket handler = listener.EndAccept(ar);
-
-            // Create the state object.  
-            StateObject state = new StateObject();
-            state.workSocket = handler;
-            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                new AsyncCallback(ReadCallback), state);
+            Debug.WriteLine("Server Started");
         }
 
-        public static void ReadCallback(IAsyncResult ar)
+        public void StopListening()
         {
-            String content = String.Empty;
-
-            // Retrieve the state object and the handler socket  
-            // from the asynchronous state object.  
-            StateObject state = (StateObject)ar.AsyncState;
-            Socket handler = state.workSocket;
-
-            // Read data from the client socket.
-            int bytesRead = handler.EndReceive(ar);
-
-            if (bytesRead > 0)
-            {
-                // There  might be more data, so store the data received so far.  
-                state.sb.Append(Encoding.ASCII.GetString(
-                    state.buffer, 0, bytesRead));
-
-                // Check for end-of-file tag. If it is not there, read
-                // more data.  
-                content = state.sb.ToString();
-                if (content.IndexOf("<EOF>") > -1)
-                {
-                    // All the data has been read from the
-                    // client. Display it on the console.  
-                    Debug.WriteLine("Read {0} bytes from socket. \n Data : {1}",
-                        content.Length, content);
-                    // Echo the data back to the client.  
-                    Send(handler, content);
-                }
-                else
-                {
-                    // Not all data received. Get more.  
-                    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReadCallback), state);
-                }
-            }
+            server.Stop();
         }
 
-        private static void Send(Socket handler, String data)
+        private void ServerStart()
         {
-            // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
-
-            // Begin sending the data to the remote device.  
-            handler.BeginSend(byteData, 0, byteData.Length, 0,
-                new AsyncCallback(SendCallback), handler);
+            server.Start();
+            AcceptConnection();  //accepts incoming connections
         }
-
-        private static void SendCallback(IAsyncResult ar)
+         
+        private void AcceptConnection()
         {
             try
             {
-                // Retrieve the socket from the state object.  
-                Socket handler = (Socket)ar.AsyncState;
-
-                // Complete sending the data to the remote device.  
-                int bytesSent = handler.EndSend(ar);
-                Debug.WriteLine("Sent {0} bytes to client.", bytesSent);
-
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
-
+                server.BeginAcceptTcpClient(HandleConnection, server);  //this is called asynchronously and will run in a different thread
             }
-            catch (Exception e)
+            catch(Exception ex)
             {
-                Debug.WriteLine(e.ToString());
+                Debug.WriteLine("Server closed");
             }
         }
 
-        public static int Main(String[] args)
+        private void HandleConnection(IAsyncResult result)  //the parameter is a delegate, used to communicate between threads
         {
-            StartListening();
-            return 0;
+            try
+            {
+                AcceptConnection();  //once again, checking for any other incoming connections
+                TcpClient client = server.EndAcceptTcpClient(result);  //creates the TcpClient
+                using (client)
+                {
+                    NetworkStream ns = client.GetStream();
+
+                    /* here you can add the code to send/receive data */
+                    byte[] hello = new byte[100];   //any message must be serialized (converted to byte array)
+                    hello = Encoding.Default.GetBytes(IP.GetCurrentMachineIP());  //conversion string => byte array
+
+                    ns.Write(hello, 0, hello.Length);     //sending the message
+
+                    while (client.Connected)  //while the client is connected, we look for incoming messages
+                    {
+                        byte[] msg = new byte[1024];     //the messages arrive as byte array
+                        ns.Read(msg, 0, msg.Length);   //the same networkstream reads the message sent by the client
+                        Debug.WriteLine(Encoding.Default.GetString(msg)); //now , we write the message as string
+                    }
+                }
+                client.Close();
+                client.Dispose();
+            }
+            catch
+            {
+                return;
+            }        
         }
     }
 

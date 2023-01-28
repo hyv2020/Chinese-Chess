@@ -370,7 +370,7 @@ namespace ChineseChess
         private void SaveButton_Click(object sender, EventArgs e)
         {
             string fileName = GetSaveFileName();
-            if(System.IO.File.Exists(FilePaths.rootSaveFilePath + fileName + ".sav"))
+            if (System.IO.File.Exists(FilePaths.rootSaveFilePath + fileName + ".sav"))
             {
                 var overwrite = MessageBox.Show("Save file exist. Overwrite existing file?", "Overwrite file", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (overwrite == DialogResult.Yes)
@@ -378,9 +378,9 @@ namespace ChineseChess
                     UtilOps.SaveFile(fileName, true);
                     SaveGameMessage();
                 }
-                else if(overwrite == DialogResult.No)
+                else if (overwrite == DialogResult.No)
                 {
-                    UtilOps.SaveFile(fileName, false); 
+                    UtilOps.SaveFile(fileName, false);
                     SaveGameMessage();
                 }
             }

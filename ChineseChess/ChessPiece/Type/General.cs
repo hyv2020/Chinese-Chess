@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Net;
 
 namespace ChineseChess
 {
@@ -50,7 +48,7 @@ namespace ChineseChess
         }
         private bool CheckFlyingGeneral(out Cell cell, ChessBoard chessBoard)
         {
-            if (this.Side== Side.Red) 
+            if (this.Side == Side.Red)
             {
                 for (int i = this.Y; i >= 0; i--)
                 {
@@ -92,10 +90,10 @@ namespace ChineseChess
                     }
                 }
             }
-            
+
             cell = null;
             return false;
         }
-      
+
     }
 }

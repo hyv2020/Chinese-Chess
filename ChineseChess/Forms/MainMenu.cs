@@ -1,8 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using GameClient;
 using GameServer;
-using GameClient;
-using System.Threading.Tasks;
+using System;
+using System.Windows.Forms;
 
 namespace ChineseChess
 {
@@ -16,9 +15,10 @@ namespace ChineseChess
         private void StartButton_Click(object sender, EventArgs e)
         {
             Game newGame = new Game();
-            newGame.Show();            
+            newGame.Show();
             this.Visible = false;
-
+            this.Close();
+            this.Dispose();
         }
 
         private void QuitButton_Click(object sender, EventArgs e)
@@ -50,26 +50,18 @@ namespace ChineseChess
                 Game newGame = new Game(saveFileName);
                 newGame.Show();
                 this.Visible = false;
+                this.Close();
+                this.Dispose();
             }
         }
 
         private void NetworkModeButton_Click(object sender, EventArgs e)
         {
-            RunServerAndClient().RunSynchronously();
+            NetworkForm networkForm = new NetworkForm();
+            networkForm.Show();
 
         }
-        private async Task RunServerAndClient()
-        {
-            try
-            {
-                Task server = Task.Run(() => AsynchronousSocketListener.StartListening());
-                Task client = Task.Run(() => AsynchronousClient.StartClient());
-                Task.WaitAll(server);
-            }
-            catch (Exception ex)
-            {
 
-            }
-        }
+
     }
 }
