@@ -229,7 +229,7 @@ namespace ChineseChess
         private void SaveState()
         {
             Turn currentTurnState = new Turn(this.currentTurn, this.moveSide, this.board.SaveGame().ToList());
-            currentTurnState.SaveTurnToFile();
+            currentTurnState.SaveToFile();
             this.turnRecord.Add(currentTurnState);
             this.AddTurnBoxItem(this.currentTurn);
         }

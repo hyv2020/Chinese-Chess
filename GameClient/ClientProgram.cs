@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace GameClient
 {
@@ -16,7 +17,7 @@ namespace GameClient
         {
             this.serverIP = server;
         }
-        public void Connect(String message)
+        public async Task ConnectAsync(String message)
         {
             try
             {
@@ -35,29 +36,34 @@ namespace GameClient
 
                     // Get a client stream for reading and writing.
                     NetworkStream stream = tcpClient.GetStream();
+                    using(stream)
+                    {
+                        // Send the message to the connected TcpServer.
+                        await stream.WriteAsync(data, 0, data.Length);
 
-                    // Send the message to the connected TcpServer.
-                    stream.Write(data, 0, data.Length);
+                        Debug.WriteLine("Sent: {0}", message);
 
-                    Debug.WriteLine("Sent: {0}", message);
+                        // Receive the server response.
 
-                    // Receive the server response.
+                        // Buffer to store the response bytes.
+                        data = new Byte[256];
 
-                    // Buffer to store the response bytes.
-                    data = new Byte[256];
+                        // String to store the response ASCII representation.
+                        String responseData = String.Empty;
 
-                    // String to store the response ASCII representation.
-                    String responseData = String.Empty;
+                        // Read the first batch of the TcpServer response bytes.
+                        Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
+                        // data recieved from server
+                        responseData = Encoding.Default.GetString(data, 0, bytes);
 
-                    // Read the first batch of the TcpServer response bytes.
-                    Int32 bytes = stream.Read(data, 0, data.Length);
-                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    Debug.WriteLine("Received: {0}", responseData);
+                        Debug.WriteLine("Received: {0}", message);
 
-                    // Explicit close is not necessary since TcpClient.Dispose() will be
-                    // called automatically.
-                    // stream.Close();
-                    // client.Close();
+                        // Explicit close is not necessary since TcpClient.Dispose() will be
+                        // called automatically.
+                        // stream.Close();
+                        // client.Close();
+                    }
+
                 };
             }
             catch (ArgumentNullException e)
@@ -68,13 +74,9 @@ namespace GameClient
             {
                 Debug.WriteLine("SocketException: {0}", e);
             }
-
-            Debug.WriteLine("\n Press Enter to continue...");
-
         }
         public void Disconnect()
         {
-            tcpClient.Dispose();
             tcpClient= null;
         }
     }

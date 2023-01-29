@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+
 namespace ChineseChess
 {
     public class Turn
@@ -13,7 +16,7 @@ namespace ChineseChess
             WhosTurn = whosTurn;
             BoardState = boardState;
         }
-        public void SaveTurnToFile()
+        public void SaveToFile()
         {
             using (StreamWriter outputFile = new StreamWriter(Path.Combine(FilePaths.rootTempFilePath, $"{this.TurnNumber}.txt")))
             {
@@ -22,6 +25,15 @@ namespace ChineseChess
                 {
                     outputFile.WriteLine(row);
                 }
+            }
+        }
+        public byte[] ToByteArray()
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, this);
+                return ms.ToArray();
             }
         }
     }

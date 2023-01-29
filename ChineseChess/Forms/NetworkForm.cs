@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace ChineseChess
 
         private void HostGameButton_Click(object sender, EventArgs e)
         {
-            listener.StartListening();
+            listener.StartListeningAsync();
            
         }
 
@@ -31,11 +32,12 @@ namespace ChineseChess
         {
             try
             {
-                client.Connect("test2");
+                //listener.SendMessage();
+                client.ConnectAsync("192.168.1.96");
             }
             catch
             {
-
+                Debug.WriteLine("192.168.1.96 connection failed");
             }
         }
 
