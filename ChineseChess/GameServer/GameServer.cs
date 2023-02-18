@@ -8,6 +8,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NetworkCommsDotNet;
+using ChineseChess;
+using System.Linq;
 
 namespace GameServer
 {
@@ -34,7 +37,7 @@ namespace GameServer
                     Debug.WriteLine("Waiting for a connection... ");
 
                     // max clients connection
-                    if(clients.Count < 3) 
+                    if (clients.Count < 3)
                     {
                         // Perform a blocking call to accept requests.
                         // You could also use server.AcceptSocket() here.
@@ -49,7 +52,10 @@ namespace GameServer
                         // with connected client
                         await HandleClientAsync(client);
                     }
-                    
+                    else
+                    {
+
+                    }
                 }
             }
             catch (SocketException e)
@@ -75,18 +81,14 @@ namespace GameServer
                 NetworkStream stream = client.GetStream();
                 using (stream)
                 {
-                    Byte[] data = new Byte[256];
-
-                    
-                    data = Encoding.Default.GetBytes("Server");
-                    int bytes = data.Length;
-                    string clientData = Encoding.Default.GetString(data, 0, bytes);
+                    byte[] data = new byte[1024];
+                    //data = Encoding.Default.GetBytes("Server");
+                    string clientData = Encoding.Default.GetString(data, 0, 6);
 
                     // recieve data from client
-                    //bytes = await stream.ReadAsync(data, 0, data.Length);
-                    //clientData = Encoding.Default.GetString(data, 0, bytes);
-
-                    Debug.WriteLine("Received: {0}", clientData);
+                    int cbytes = await stream.ReadAsync(data, 0, data.Length);
+                    var cclientData = Turn.ByteArrayToObject(data);
+                    Debug.WriteLine($"Received: {cclientData}", "Server");
 
                     // Loop through the list of clients and send the message to all clients except the sender
                     foreach (TcpClient otherClient in clients)
@@ -95,19 +97,20 @@ namespace GameServer
                         {
                             // send data to different client
                             NetworkStream otherStream = otherClient.GetStream();
-                            Debug.WriteLine("Redirect: {0}", clientData);
-                            await otherStream.WriteAsync(data, 0, bytes);
+                            Debug.WriteLine($"Redirect: {cclientData}", "Server");
+                            await otherStream.WriteAsync(data, 0, data.Length);
                         }
                         else
                         {
                             // return message back to same client
-                            Debug.WriteLine("Return: {0}", clientData);
-                            await stream.WriteAsync(data, 0, bytes);
+                            Debug.WriteLine($"Return: {cclientData}", "Server");
+                            await stream.WriteAsync(data, 0, data.Length);
                         }
                     }
                 }
-            } 
+            }
         }
+
     }
 
 }

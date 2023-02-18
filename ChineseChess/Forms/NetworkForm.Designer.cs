@@ -31,6 +31,7 @@
             this.HostGameButton = new System.Windows.Forms.Button();
             this.JoinGameButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
+            this.ClientSendDataButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // HostGameButton
@@ -63,16 +64,28 @@
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
+            // ClientSendDataButton
+            // 
+            this.ClientSendDataButton.Location = new System.Drawing.Point(72, 183);
+            this.ClientSendDataButton.Name = "ClientSendDataButton";
+            this.ClientSendDataButton.Size = new System.Drawing.Size(169, 96);
+            this.ClientSendDataButton.TabIndex = 3;
+            this.ClientSendDataButton.Text = "Client Send Data";
+            this.ClientSendDataButton.UseVisualStyleBackColor = true;
+            this.ClientSendDataButton.Click += new System.EventHandler(this.ClientSendDataButton_Click);
+            // 
             // NetworkForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.ClientSendDataButton);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.JoinGameButton);
             this.Controls.Add(this.HostGameButton);
             this.Name = "NetworkForm";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.NetworkForm_Load);
             this.ResumeLayout(false);
 
         }
@@ -82,5 +95,6 @@
         private System.Windows.Forms.Button HostGameButton;
         private System.Windows.Forms.Button JoinGameButton;
         private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button ClientSendDataButton;
     }
 }

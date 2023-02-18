@@ -49,5 +49,15 @@ namespace ChineseChess
             this.Close();
             this.Dispose();
         }
+
+        private void NetworkForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ClientSendDataButton_Click(object sender, EventArgs e)
+        {
+            client.SendMessage(new Turn());
+        }
     }
 }

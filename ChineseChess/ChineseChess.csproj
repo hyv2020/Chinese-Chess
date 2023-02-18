@@ -57,6 +57,9 @@
     <Reference Include="Aspose.Zip, Version=22.11.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
       <HintPath>..\packages\Aspose.Zip.22.11.0\lib\net40\Aspose.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="NetworkCommsDotNet, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetworkCommsDotNet.3.0.3\lib\NetworkCommsDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -94,6 +97,8 @@
     <Compile Include="Forms\MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameClient\GameClient.cs" />
+    <Compile Include="GameServer\GameServer.cs" />
     <Compile Include="Utils\Turn.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -164,17 +169,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GameClient\GameClient.csproj">
-      <Project>{81482abb-1378-4436-befa-9b5e2dc0f941}</Project>
-      <Name>GameClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HostGameServer\GameServer.csproj">
-      <Project>{f75efed9-5727-4125-88e0-974b6e75f0e9}</Project>
-      <Name>GameServer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\NetworkCommons\NetworkCommons.csproj">
+      <Project>{18559c8e-7d83-4efa-93d1-7e3657e56618}</Project>
+      <Name>NetworkCommons</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
