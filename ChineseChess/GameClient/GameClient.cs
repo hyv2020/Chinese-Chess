@@ -2,11 +2,13 @@
 using NetworkCommons;
 using System;
 using System.Diagnostics;
-using System.Linq;
+using System.IO;
 using System.Net.Sockets;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GameClient
 {
@@ -15,7 +17,7 @@ namespace GameClient
         string serverIP;
         TcpClient tcpClient;
 
-        public AsynchronousClient(string server) 
+        public AsynchronousClient(string server)
         {
             this.serverIP = server;
         }
@@ -29,44 +31,29 @@ namespace GameClient
                 // combination.
                 Int32 port = Ports.remotePort;
 
-                // Prefer a using declaration to ensure the instance is Disposed later.
+                // Not a using declaration to the instance stays connected.
                 tcpClient = new TcpClient(serverIP, port);
-                using (tcpClient)
+                while (true)
                 {
-                    // Translate the passed message into ASCII and store it as a Byte array.
-                    Byte[] data = System.Text.Encoding.Default.GetBytes(message);
-
-                    // Get a client stream for reading and writing.
-                    NetworkStream stream = tcpClient.GetStream();
-                    using(stream)
+                    try
                     {
-                        // Send the message to the connected TcpServer.
-                        await stream.WriteAsync(data, 0, data.Length);
-
-                        Debug.WriteLine($"Sent: {message}", message);
-
-                        // Receive the server response.
-
-                        // Buffer to store the response bytes.
-                        data = new Byte[256];
-
-                        // String to store the response ASCII representation.
-                        string responseData = string.Empty;
-
-                        // Read the first batch of the TcpServer response bytes.
-                        int bytes = await stream.ReadAsync(data, 0, data.Length);
-                        // data recieved from server
-                        responseData = Encoding.Default.GetString(data, 0, bytes);
-
-                        Debug.WriteLine($"Received: {responseData}", message);
-
-                        // Explicit close is not necessary since TcpClient.Dispose() will be
-                        // called automatically.
-                        // stream.Close();
-                        // client.Close();
+                        if (!tcpClient.Connected)
+                        {
+                            tcpClient.Connect(serverIP, port);
+                        }
+                        // Send and receive data here...
+                        await Listen();
+                        //await SendMessageAsync(new Turn());
+                        // Close the stream and the client when finished
+                        //stream.Close();
                     }
+                    catch (Exception ex)
+                    {
+                        // Handle any exceptions here...
+                        // If the connection was lost, the loop will start over
+                    }
+                }
 
-                };
             }
             catch (ArgumentNullException e)
             {
@@ -77,8 +64,12 @@ namespace GameClient
                 Debug.WriteLine("SocketException: {0}", e);
             }
         }
-
-        public async Task SendMessage(object message)
+        public async Task Nothing()
+        {
+            Debug.WriteLine("Client connected");
+            Thread.Sleep(5000);
+        }
+        public async Task SendMessageAsync(object message)
         {
             try
             {
@@ -87,47 +78,39 @@ namespace GameClient
                 // connected to the same address as specified by the server, port
                 // combination.
                 Int32 port = Ports.remotePort;
-                tcpClient = new TcpClient(serverIP, port);
                 Turn turn = message as Turn;
-                if(turn is null) 
+                if (turn is null)
                 {
                     throw new ArgumentNullException(nameof(turn));
                 }
+
                 // Prefer a using declaration to ensure the instance is Disposed later.
-                using (tcpClient)
-                {
-                    // Translate the passed message into ASCII and store it as a Byte array.
-                    Byte[] data = turn.ToByteArray();
+                // Translate the passed message and store it as a Byte array.
+                byte[] data = turn.ToByteArray();
 
-                    // Get a client stream for reading and writing.
-                    NetworkStream stream = tcpClient.GetStream();
-                    using (stream)
-                    {
-                        // Send the message to the connected TcpServer.
-                        await stream.WriteAsync(data, 0, data.Length);
+                // Get a client stream for reading and writing.
+                NetworkStream stream = tcpClient.GetStream();
+                // Send the message to the connected TcpServer.
+                await stream.WriteAsync(data, 0, data.Length);
 
-                        Debug.WriteLine($"Sent: {turn}", message);
+                Debug.WriteLine($"Sent: {turn}", this.serverIP.ToString());
 
-                        // Receive the server response.
+                // Receive the server response.
 
-                        // Buffer to store the response bytes.
-                        data = new byte[1024];
+                // Buffer to store the response bytes.
+                data = new byte[Ports.bufferSize];
+                // Read the first batch of the TcpServer response bytes.
+                int bytes = await stream.ReadAsync(data, 0, data.Length);
+                // data recieved from server
+                var responseData = Turn.ByteArrayToObject(data);
 
+                Debug.WriteLine($"Received: {responseData}", this.serverIP.ToString());
 
-                        // Read the first batch of the TcpServer response bytes.
-                        int bytes = await stream.ReadAsync(data, 0, data.Length);
-                        // data recieved from server
-                        var responseData = Turn.ByteArrayToObject(data);
+                // Explicit close is not necessary since TcpClient.Dispose() will be
+                // called automatically.
+                // stream.Close();
+                // client.Close();
 
-                        Debug.WriteLine($"Received: {responseData}", message);
-
-                        // Explicit close is not necessary since TcpClient.Dispose() will be
-                        // called automatically.
-                        // stream.Close();
-                        // client.Close();
-                    }
-
-                };
             }
             catch (ArgumentNullException e)
             {
@@ -139,9 +122,21 @@ namespace GameClient
             }
 
         }
+        private async Task Listen()
+        {
+            NetworkStream stream = tcpClient.GetStream();
+            // Buffer to store the response bytes.
+            var data = new byte[Ports.bufferSize];
+            // Read the first batch of the TcpServer response bytes.
+            int bytes = await stream.ReadAsync(data, 0, data.Length);
+            // data recieved from server
+            var responseData = Turn.ByteArrayToObject(data);
+
+            Debug.WriteLine($"Received: {responseData}", this.serverIP.ToString());
+        }
         public void Disconnect()
         {
-            tcpClient= null;
+            tcpClient = null;
         }
     }
 }

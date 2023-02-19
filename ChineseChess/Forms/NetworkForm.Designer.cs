@@ -32,6 +32,8 @@
             this.JoinGameButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
             this.ClientSendDataButton = new System.Windows.Forms.Button();
+            this.ServerIPTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // HostGameButton
@@ -74,11 +76,31 @@
             this.ClientSendDataButton.UseVisualStyleBackColor = true;
             this.ClientSendDataButton.Click += new System.EventHandler(this.ClientSendDataButton_Click);
             // 
+            // ServerIPTextBox
+            // 
+            this.ServerIPTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerIPTextBox.Location = new System.Drawing.Point(225, 127);
+            this.ServerIPTextBox.Name = "ServerIPTextBox";
+            this.ServerIPTextBox.Size = new System.Drawing.Size(265, 27);
+            this.ServerIPTextBox.TabIndex = 4;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(220, 99);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(171, 25);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Server IP Address";
+            // 
             // NetworkForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.ServerIPTextBox);
             this.Controls.Add(this.ClientSendDataButton);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.JoinGameButton);
@@ -87,6 +109,7 @@
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.NetworkForm_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -96,5 +119,7 @@
         private System.Windows.Forms.Button JoinGameButton;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button ClientSendDataButton;
+        private System.Windows.Forms.TextBox ServerIPTextBox;
+        private System.Windows.Forms.Label label1;
     }
 }

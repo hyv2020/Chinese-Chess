@@ -1,6 +1,4 @@
-﻿using GameClient;
-using GameServer;
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace ChineseChess

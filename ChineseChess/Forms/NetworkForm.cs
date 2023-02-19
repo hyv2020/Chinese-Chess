@@ -1,43 +1,40 @@
 ﻿using GameClient;
 using GameServer;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ChineseChess
 {
     public partial class NetworkForm : Form
     {
-        AsynchronousTCPListener listener = new AsynchronousTCPListener();
-        AsynchronousClient client = new AsynchronousClient("192.168.1.96");
+        AsynchronousTCPListener listener;
+        AsynchronousClient client;
         public NetworkForm()
         {
             InitializeComponent();
         }
 
-        private void HostGameButton_Click(object sender, EventArgs e)
+        private async void HostGameButton_Click(object sender, EventArgs e)
         {
-            listener.StartListeningAsync();
-           
+            listener= new AsynchronousTCPListener();
+            var listen = listener.StartListeningAsync();
+            await listen;
         }
 
-        private void JoinGameButton_Click(object sender, EventArgs e)
+        private async void JoinGameButton_Click(object sender, EventArgs e)
         {
             try
             {
-                //listener.SendMessage();
-                client.ConnectAsync("192.168.1.96");
+                // ip address of current dervice
+                string localIP = NetworkCommons.IP.GetCurrentMachineIP();
+                client = new AsynchronousClient(ServerIPTextBox.Text);
+                var connectServer = client.ConnectAsync(ServerIPTextBox.Text);
+                await connectServer;
             }
             catch
             {
-                Debug.WriteLine("192.168.1.96 connection failed");
+                Debug.WriteLine($"{ServerIPTextBox.Text} connection failed");
             }
         }
 
@@ -55,9 +52,10 @@ namespace ChineseChess
 
         }
 
-        private void ClientSendDataButton_Click(object sender, EventArgs e)
+        private async void ClientSendDataButton_Click(object sender, EventArgs e)
         {
-            client.SendMessage(new Turn());
+            var sendData = client.SendMessageAsync(new Turn());
+            await sendData;
         }
     }
 }
