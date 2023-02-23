@@ -1,4 +1,4 @@
-﻿namespace ChineseChess
+﻿namespace GameCommons
 {
     //define piece type
     public enum ChessPieceType

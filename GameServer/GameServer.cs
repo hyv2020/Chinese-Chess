@@ -1,4 +1,4 @@
-﻿using ChineseChess;
+﻿using GameCommons;
 using NetworkCommons;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -3,6 +3,7 @@ using GameServer;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GameCommons;
 
 namespace ChineseChess
 {

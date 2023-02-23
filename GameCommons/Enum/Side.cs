@@ -1,4 +1,4 @@
-﻿namespace ChineseChess
+﻿namespace GameCommons
 {
     public enum Side
     {

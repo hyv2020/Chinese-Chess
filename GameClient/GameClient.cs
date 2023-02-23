@@ -1,4 +1,4 @@
-﻿using ChineseChess;
+﻿using GameCommons;
 using NetworkCommons;
 using System;
 using System.Diagnostics;
@@ -8,7 +8,6 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace GameClient
 {

@@ -97,9 +97,6 @@
     <Compile Include="Forms\MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
-    <Compile Include="GameClient\GameClient.cs" />
-    <Compile Include="GameServer\GameServer.cs" />
-    <Compile Include="Utils\Turn.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Board\Cell.cs" />
@@ -118,9 +115,6 @@
     <Compile Include="ChessPiece\Type\Soldier.cs" />
     <Compile Include="DrawFunctions\DrawBoardFunctions.cs" />
     <Compile Include="DrawFunctions\DrawChessPieceFunctions.cs" />
-    <Compile Include="Enum\ChessPieceType.cs" />
-    <Compile Include="Enum\Side.cs" />
-    <Compile Include="Utils\FilePaths.cs" />
     <Compile Include="Utils\GlobalVariables.cs" />
     <Compile Include="Utils\UtilOps.cs" />
     <EmbeddedResource Include="Forms\Game.resx">
@@ -171,8 +165,19 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\GameClient\GameClient.csproj">
+      <Project>{86739a4d-8b1a-4182-91fa-d97a7bcabcc0}</Project>
+      <Name>GameClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameCommons\GameCommons.csproj">
+      <Project>{4e371112-6233-4188-9957-74361c7915a3}</Project>
+      <Name>GameCommons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameServer\GameServer.csproj">
+      <Project>{81b68548-08c8-406d-82db-68164dce65e3}</Project>
+      <Name>GameServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetworkCommons\NetworkCommons.csproj">
       <Project>{18559c8e-7d83-4efa-93d1-7e3657e56618}</Project>
       <Name>NetworkCommons</Name>
