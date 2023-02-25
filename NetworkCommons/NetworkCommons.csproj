@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NetworkObserver\INetworkObserver.cs" />
     <Compile Include="IP.cs" />
+    <Compile Include="NetworkObserver\NetworkObserver.cs" />
     <Compile Include="Ports.cs" />
     <Compile Include="StateObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

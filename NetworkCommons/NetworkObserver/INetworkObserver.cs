@@ -1,7 +1,7 @@
 ﻿
-namespace GameClient
+namespace NetworkCommons
 {
-    public interface IClientObserver
+    public interface INetworkObserver
     {
         void OnTcpDataReceived(object data);
 

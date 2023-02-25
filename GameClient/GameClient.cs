@@ -12,17 +12,15 @@ using System.Threading.Tasks;
 
 namespace GameClient
 {
-    public class AsynchronousClient
+    public class AsynchronousClient: NetworkObserver
     {
         string serverIP;
         TcpClient tcpClient;
         NetworkStream stream;
         bool streamOpened = false;
         bool clientConnected = false;
-        private readonly object lockObject = new object();
-        private readonly List<IClientObserver> observers = new List<IClientObserver>();
 
-        List<Turn> turns= new List<Turn>();
+
         public AsynchronousClient(string server)
         {
             this.serverIP = server;
@@ -71,11 +69,7 @@ namespace GameClient
                 Debug.WriteLine("SocketException: {0}", e);
             }
         }
-        public async Task Nothing()
-        {
-            Debug.WriteLine("Client connected");
-            Thread.Sleep(5000);
-        }
+
         public async Task SendMessageAsync(object message)
         {
             try
@@ -126,7 +120,7 @@ namespace GameClient
                 int bytes = await stream.ReadAsync(data, 0, data.Length);
                 NotifyObservers(data);
                 // data recieved from server
-                var responseData = Turn.ByteArrayToObject(data);
+                var responseData = data.FromByteArray();
                 Debug.WriteLine($"Received: {responseData}", this.serverIP.ToString());
 
             }
@@ -144,32 +138,6 @@ namespace GameClient
             tcpClient = null;
         }
 
-        private void NotifyObservers(byte[] data)
-        {
-            lock (lockObject)
-            {
-                foreach (IClientObserver observer in observers)
-                {
-                    object obj = data.FromByteArray();
-                    observer.OnTcpDataReceived(obj);
-                }
-            }
-        }
-
-        public void RegisterObserver(IClientObserver observer)
-        {
-            lock (lockObject)
-            {
-                observers.Add(observer);
-            }
-        }
-
-        public void UnregisterObserver(IClientObserver observer)
-        {
-            lock (lockObject)
-            {
-                observers.Remove(observer);
-            }
-        }
+        
     }
 }

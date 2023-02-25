@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GameServer
 {
-    public class AsynchronousTCPListener
+    public class AsynchronousTCPListener: NetworkObserver
     {
         TcpListener server = new TcpListener(IPAddress.Any, Ports.remotePort);
         public AsynchronousTCPListener()
@@ -34,16 +34,31 @@ namespace GameServer
                     // Perform a blocking call to accept requests.
                     // You could also use server.AcceptSocket() here.
                     TcpClient client = await server.AcceptTcpClientAsync();
+                    // max two clients
+                    if (clients.Count == 2)
+                    {
+                        client.Close();
+                        client.Dispose();
+                    }
                     // Add the new client to the list of clients
                     clients.Add(client);
                     Debug.WriteLine("Client Connected!");
+                    var clientCount = clients.Count.ToByteArray();
+                    NotifyObservers(clientCount);
                     // Start a new thread to handle communication
                     // with connected client
                     while (client.Connected) 
                     {
+                        bool justConnected = true;
+                        
                         var message = await ListenClientAsync(client);
                         await RedirectToClientAsync(message, client);
-                        //await HandleClientAsync(client);
+                        // tell clients how many is connected to server
+                        if (justConnected)
+                        {
+                            await RedirectToClientAsync(clients.Count, client);
+                            justConnected = false;
+                        }
                         Debug.WriteLine("Continue listening... ");
                     }
                     

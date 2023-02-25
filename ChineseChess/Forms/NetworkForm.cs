@@ -8,10 +8,11 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 using NetworkCommons;
+using ChineseChess.Forms;
 
 namespace ChineseChess
 {
-    public partial class NetworkForm : Form, IClientObserver
+    public partial class NetworkForm : Form, INetworkObserver
     {
         AsynchronousTCPListener listener;
         AsynchronousClient client;
@@ -20,11 +21,16 @@ namespace ChineseChess
             InitializeComponent();
         }
 
-        private async void HostGameButton_Click(object sender, EventArgs e)
+        private void HostGameButton_Click(object sender, EventArgs e)
         {
-            listener= new AsynchronousTCPListener();
-            var listen = listener.StartListeningAsync();
-            await listen;
+            NetworkGame game = new NetworkGame();
+            game.Show();
+            //this.Visible = false;
+            //this.Close();
+            //this.Dispose();
+            //listener= new AsynchronousTCPListener();
+            //var listen = listener.StartListeningAsync();
+            //await listen;
         }
 
         private async void JoinGameButton_Click(object sender, EventArgs e)

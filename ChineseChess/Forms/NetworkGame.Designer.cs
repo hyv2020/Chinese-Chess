@@ -33,6 +33,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.TurnLabel = new System.Windows.Forms.Label();
             this.QuitButton = new System.Windows.Forms.Button();
+            this.PlayerLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label8
@@ -83,12 +84,24 @@
             this.QuitButton.TabIndex = 10;
             this.QuitButton.Text = "Quit Game";
             this.QuitButton.UseVisualStyleBackColor = true;
+            this.QuitButton.Click += new System.EventHandler(this.QuitButton_Click);
+            // 
+            // PlayerLabel
+            // 
+            this.PlayerLabel.AutoSize = true;
+            this.PlayerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F);
+            this.PlayerLabel.Location = new System.Drawing.Point(936, 341);
+            this.PlayerLabel.Name = "PlayerLabel";
+            this.PlayerLabel.Size = new System.Drawing.Size(252, 48);
+            this.PlayerLabel.TabIndex = 15;
+            this.PlayerLabel.Text = "Player Label";
             // 
             // NetworkGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1262, 977);
+            this.Controls.Add(this.PlayerLabel);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label1);
@@ -109,5 +122,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label TurnLabel;
         private System.Windows.Forms.Button QuitButton;
+        private System.Windows.Forms.Label PlayerLabel;
     }
 }

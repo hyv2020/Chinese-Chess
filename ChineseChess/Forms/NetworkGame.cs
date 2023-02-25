@@ -11,12 +11,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ChineseChess.Forms
 {
-    public partial class NetworkGame : Form, IClientObserver
+    public partial class NetworkGame : Form, INetworkObserver
     {
         AsynchronousTCPListener listener;
         AsynchronousClient client;
@@ -28,20 +29,13 @@ namespace ChineseChess.Forms
         List<PictureBox> chessPiecePics = new List<PictureBox>();
         int currentTurn = 1;
         List<Turn> turnRecord = new List<Turn>();
+        BackgroundWorker worker;
         public NetworkGame()
         {
             InitializeComponent();
             UtilOps.CheckSaveDirectory();
             UtilOps.ClearTempFolder();
-            this.board = new ChessBoard();
-            listener = new AsynchronousTCPListener();
-            ServerStartAsync();
-            ClientStartAsync(NetworkCommons.IP.GetCurrentMachineIP());
-            this.moveSide = RandomStart();
-            this.playerSide= RandomStart();
-            LoadTurn(new Turn(moveSide));
-            SendDataToServerAsync(this.playerSide.ToString());
-            SendDataToServerAsync(this.turnRecord.First());
+            HostInitialise();
         }
         public NetworkGame(string connectionIP)
         {
@@ -52,10 +46,49 @@ namespace ChineseChess.Forms
             ClientStartAsync(connectionIP);
 
         }
-        private async void NetworkGame_Load(object sender, EventArgs e)
+        private void NetworkGame_Load(object sender, EventArgs e)
         {
-            await CheckGameStart();
+            
         }
+
+        #region Initialise Game
+        private void CheckGameStart()
+        {
+
+        }
+        private async void HostInitialise()
+        {
+            this.board = new ChessBoard();
+            listener = new AsynchronousTCPListener();
+            this.AddCellsToControl();
+            ServerStartAsync();
+            string localIP = NetworkCommons.IP.GetCurrentMachineIP();
+            ClientStartAsync(localIP);
+            this.host = true;
+            this.moveSide = RandomStart();
+            var playerSide = RandomStart();
+            await SendDataToServerAsync(playerSide);
+            this.playerSide= playerSide;
+            UpdatePlayerLabel(playerSide);
+            Turn startTurn = new Turn(this.moveSide);
+            await SendDataToServerAsync(startTurn);
+            UpdateTurnLabel();
+        }
+
+        private void UpdatePlayerLabel(Side? side = null)
+        {
+            if (this.playerSide == Side.Red)
+            {
+                PlayerLabel.ForeColor = Color.Red;
+            }
+            else
+            {
+                PlayerLabel.ForeColor = Color.Black;
+            }
+            PlayerLabel.Text = $"You are {this.playerSide}";
+        }
+
+        #endregion
 
         #region Network Management
 
@@ -95,9 +128,16 @@ namespace ChineseChess.Forms
             {
                 LoadTurn(data as Turn);
             }
+            else if(int.TryParse(data.ToString(), out int clientCount))
+            {
+                if(clientCount == 2)
+                {
+                    this.gameStarted= true;
+                }
+            }
             else
             {
-                var recievedSide = (Side)Enum.Parse(typeof(Turn), data.ToString());
+                var recievedSide = (Side)Enum.Parse(typeof(Side), data.ToString());
                 if (this.host)
                 {
                     this.playerSide= recievedSide;
@@ -116,21 +156,10 @@ namespace ChineseChess.Forms
             }
             Debug.WriteLine($"Observer Received data: {data}");
         }
-        private async void SendDataToServerAsync(object data) 
+        private async Task SendDataToServerAsync(object data) 
         {
             var sendData = client.SendMessageAsync(data);
             await sendData;
-        }
-
-        private Task CheckGameStart()
-        {
-            while (true)
-            {
-                if (!gameStarted)
-                {
-                    this.board.DisableAllPieces();
-                }
-            }
         }
 
         #endregion
@@ -193,21 +222,7 @@ namespace ChineseChess.Forms
         #endregion
 
         #region Controls
-        private void AddAllToControl()
-        {
-            foreach (var col in this.board.Cells)
-            {
-                foreach (var cell in col)
-                {
-                    this.Controls.Add(cell.BoardPic);
-                    AddedEventHandlerToObjs(cell.BoardPic, cell);
-                    this.Controls.Add(cell.ValidMove.ValidMovePicBox);
-                    AddedEventHandlerToObjs(cell.ValidMove.ValidMovePicBox, cell.ValidMove);
-                    this.AddChessPieceInCellToControl(cell);
-                    SortCellImageOrder(cell);
-                }
-            }
-        }
+
         private void SortCellImageOrder(Cell cell)
         {
             if (cell.ChessPiece != null)
@@ -263,12 +278,11 @@ namespace ChineseChess.Forms
             }
         }
 
-        private void SaveState()
+        private async void SaveState()
         {
             Turn currentTurnState = new Turn(this.currentTurn, this.moveSide, this.board.SaveGame().ToList());
             currentTurnState.SaveToFile();
-            this.turnRecord.Add(currentTurnState);
-            SendDataToServerAsync(currentTurnState);
+            await SendDataToServerAsync(currentTurnState);
         }
 
         #endregion
@@ -285,6 +299,7 @@ namespace ChineseChess.Forms
             this.moveSide = selectedTurn.WhosTurn;
             this.LoadBoardSlate(this.board);
             // player on only use stuff on his/her turn
+            this.board.DisableAllPieces();
             if (moveSide == playerSide)
             {
                 this.board.EnableMoveAblePieces(this.moveSide);
@@ -375,8 +390,8 @@ namespace ChineseChess.Forms
                         this.ChangeSide();
                         this.EndTurn();
                         this.SaveState();
-                        this.board.EnableMoveAblePieces(this.moveSide);
-                        this.UpdateTurnLabel();
+                        //this.board.EnableMoveAblePieces(this.moveSide);
+                        //this.UpdateTurnLabel();
                     }
                     this.DeleteTempFilesAfterThisTurn(this.currentTurn);
                 }
@@ -389,18 +404,12 @@ namespace ChineseChess.Forms
             var allCells = this.board.GetAllCellsInOneList();
             var cellWithChessPiece = allCells.Where(x => x.ChessPiece != null);
             var currentCell = cellWithChessPiece.Single(x => x.ChessPiece.ChessPicture == (PictureBox)sender);
-            if (currentCell.ChessPiece.Side == this.moveSide)
+            if (this.gameStarted && currentCell.ChessPiece.Side == this.moveSide && this.moveSide == this.playerSide)
             {
                 currentCell.ChessPiece.IsSelected = true;
                 var validMoves = currentCell.ChessPiece.FindValidMove(this.board);
                 this.board.ShowValidMoves(validMoves);
             }
-        }
-        //quit game
-        private void QuitButton_Click(object sender, EventArgs e)
-        {
-            UtilOps.ClearTempFolder();
-            System.Windows.Forms.Application.Exit();
         }
 
         private int GetTurnNumber(ComboBox turnBox)
@@ -414,5 +423,12 @@ namespace ChineseChess.Forms
         }
 
         #endregion
+
+        //quit game
+        private void QuitButton_Click(object sender, EventArgs e)
+        {
+            UtilOps.ClearTempFolder();
+            System.Windows.Forms.Application.Exit();
+        }
     }
 }
