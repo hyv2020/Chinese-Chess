@@ -12,14 +12,13 @@ namespace GameServer
 {
     public class AsynchronousTCPListener
     {
-
+        TcpListener server = new TcpListener(IPAddress.Any, Ports.remotePort);
         public AsynchronousTCPListener()
         {
 
         }
-        TcpListener server = new TcpListener(IPAddress.Any, Ports.remotePort);
 
-        static HashSet<TcpClient> clients = new HashSet<TcpClient>();
+        public static HashSet<TcpClient> clients = new HashSet<TcpClient>();
         public async Task StartListeningAsync()
         {
             try
@@ -64,7 +63,7 @@ namespace GameServer
         }
         public void StopListening() => server.Stop();
         
-        private async Task<Turn> ListenClientAsync(object obj)
+        private async Task<object> ListenClientAsync(object obj)
         {
             // Retrieve the client from the parameter passed to the thread
             TcpClient client = (TcpClient)obj;
@@ -75,12 +74,12 @@ namespace GameServer
             //data = Encoding.Default.GetBytes("Server");
             // recieve data from client
             int bytes = await stream.ReadAsync(data, 0, data.Length);
-            var clientData = Turn.ByteArrayToObject(data);
+            var clientData = data.FromByteArray();
             Debug.WriteLine($"Received: {clientData}", "Server");
             return clientData;
         }
 
-        private async Task RedirectToClientAsync(Turn obj, TcpClient client)
+        private async Task RedirectToClientAsync(object obj, TcpClient client)
         {
             var data = obj.ToByteArray();
             try

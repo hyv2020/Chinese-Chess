@@ -1,4 +1,7 @@
-﻿using System.Net.Sockets;
+﻿using System.IO;
+using System;
+using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
 namespace NetworkCommons
@@ -6,18 +9,30 @@ namespace NetworkCommons
     /// <summary>
     /// State object for reading client data asynchronously  
     /// </summary>
-    public class StateObject
+    public static class StateObject
     {
         // Size of receive buffer.  
         public const int BufferSize = 1024;
 
-        // Receive buffer.  
-        public byte[] buffer = new byte[BufferSize];
-
-        // Received data string.
-        public StringBuilder sb = new StringBuilder();
-
-        // Client socket.
-        public Socket workSocket = null;
+        public static byte[] ToByteArray(this object obj)
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, obj);
+                return ms.ToArray();
+            }
+        }
+        public static object FromByteArray(this byte[] data)
+        {
+            if (data == null)
+                return default;
+            BinaryFormatter bf = new BinaryFormatter();
+            using (MemoryStream ms = new MemoryStream(data))
+            {
+                object obj = bf.Deserialize(ms);
+                return obj;
+            }
+        }
     }
 }

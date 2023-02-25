@@ -22,6 +22,12 @@ namespace GameCommons
         {
 
         }
+        public Turn(Side side)
+        {
+            TurnNumber = 1;
+            WhosTurn= side;
+            BoardState = DefaultVariables.defaultBoardStart;
+        }
         public void SaveToFile()
         {
             using (StreamWriter outputFile = new StreamWriter(Path.Combine(FilePaths.rootTempFilePath, $"{this.TurnNumber}.txt")))

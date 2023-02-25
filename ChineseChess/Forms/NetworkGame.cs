@@ -1,53 +1,142 @@
-﻿using System;
+﻿using GameClient;
+using GameCommons;
+using GameServer;
+using NetworkCommons;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using GameCommons;
 
-namespace ChineseChess
+namespace ChineseChess.Forms
 {
-    public partial class Game : Form
+    public partial class NetworkGame : Form, IClientObserver
     {
+        AsynchronousTCPListener listener;
+        AsynchronousClient client;
+        bool gameStarted = false;
+        bool host;
+        Side playerSide;
         ChessBoard board;
         Side moveSide;
         List<PictureBox> chessPiecePics = new List<PictureBox>();
         int currentTurn = 1;
         List<Turn> turnRecord = new List<Turn>();
-        public Game(string loadFromFile = null)
+        public NetworkGame()
         {
-
             InitializeComponent();
-            //initialise the game
             UtilOps.CheckSaveDirectory();
             UtilOps.ClearTempFolder();
             this.board = new ChessBoard();
-            if (loadFromFile is null)
+            listener = new AsynchronousTCPListener();
+            ServerStartAsync();
+            ClientStartAsync(NetworkCommons.IP.GetCurrentMachineIP());
+            this.moveSide = RandomStart();
+            this.playerSide= RandomStart();
+            LoadTurn(new Turn(moveSide));
+            SendDataToServerAsync(this.playerSide.ToString());
+            SendDataToServerAsync(this.turnRecord.First());
+        }
+        public NetworkGame(string connectionIP)
+        {
+            InitializeComponent();
+            UtilOps.CheckSaveDirectory();
+            UtilOps.ClearTempFolder();
+            this.board = new ChessBoard();
+            ClientStartAsync(connectionIP);
+
+        }
+        private async void NetworkGame_Load(object sender, EventArgs e)
+        {
+            await CheckGameStart();
+        }
+
+        #region Network Management
+
+        /// <summary>
+        /// Start server
+        /// </summary>
+        private async void ServerStartAsync()
+        {
+            var listen = listener.StartListeningAsync();
+            await listen;
+        }
+
+        /// <summary>
+        /// Connect client to server
+        /// </summary>
+        /// <param name="serverIP"></param>
+        private async void ClientStartAsync(string serverIP)
+        {
+            try
             {
-                this.board.LoadGame();
-                this.AddAllToControl();
-                this.RandomStart();
-                this.UpdateTurnLabel();
-                this.SaveState();
+                // ip address of current dervice
+                string localIP = NetworkCommons.IP.GetCurrentMachineIP();
+                client = new AsynchronousClient(serverIP);
+                var connectServer = client.ConnectAsync(serverIP);
+                client.RegisterObserver(this);
+                await connectServer;
+            }
+            catch
+            {
+                Debug.WriteLine($"{serverIP} client connection failed");
+            }
+        }
+
+        public void OnTcpDataReceived(object data)
+        {
+            if (data as Turn != null)
+            {
+                LoadTurn(data as Turn);
             }
             else
             {
-                this.AddCellsToControl();
-                this.LoadSave(loadFromFile);
-                this.AddAllTurnsToTurnBox();
+                var recievedSide = (Side)Enum.Parse(typeof(Turn), data.ToString());
+                if (this.host)
+                {
+                    this.playerSide= recievedSide;
+                }
+                else
+                {
+                    if(recievedSide == Side.Red)
+                    {
+                        this.playerSide= Side.Black;
+                    }
+                    else
+                    {
+                        this.playerSide= Side.Red;
+                    }
+                }
+            }
+            Debug.WriteLine($"Observer Received data: {data}");
+        }
+        private async void SendDataToServerAsync(object data) 
+        {
+            var sendData = client.SendMessageAsync(data);
+            await sendData;
+        }
+
+        private Task CheckGameStart()
+        {
+            while (true)
+            {
+                if (!gameStarted)
+                {
+                    this.board.DisableAllPieces();
+                }
             }
         }
 
-        private void Game_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        #endregion
 
         #region Turn Management
-        private void RandomStart()
+        private Side RandomStart()
         {
             Random playerStart = new Random();
             //create random number between 0 and 10
@@ -55,11 +144,11 @@ namespace ChineseChess
             //red starts if smaller than 5, black starts if greater
             if (whoStart < 5)
             {
-                this.moveSide = Side.Red;
+                 return Side.Red;
             }
             else
             {
-                this.moveSide = Side.Black;
+                return Side.Black;
             }
 
         }
@@ -100,17 +189,7 @@ namespace ChineseChess
                 this.moveSide = Side.Red;
             }
         }
-        private void AddTurnBoxItem(int turnNumber)
-        {
-            TurnBox.Items.Add($"Turn {turnNumber}");
-        }
-        private void AddAllTurnsToTurnBox()
-        {
-            foreach (var turn in this.turnRecord)
-            {
-                this.AddTurnBoxItem(turn.TurnNumber);
-            }
-        }
+
         #endregion
 
         #region Controls
@@ -165,47 +244,6 @@ namespace ChineseChess
 
         #region File Management
 
-        private void LoadSave(string saveFilePath)
-        {
-            try
-            {
-                this.turnRecord = UtilOps.LoadSaveFile(saveFilePath).ToList();
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Failed to load save file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            var selectedTurn = this.turnRecord.Last();
-            this.ClearBoard();
-            this.board.LoadGame(selectedTurn.BoardState);
-            this.currentTurn = selectedTurn.TurnNumber;
-            this.moveSide = selectedTurn.WhosTurn;
-            this.LoadBoardSlate(this.board);
-            this.board.EnableMoveAblePieces(this.moveSide);
-            this.UpdateTurnLabel();
-        }
-        private string GetSaveFileName()
-        {
-            string fileName;
-            if (SaveFileNameTextBox.Text == "")
-            {
-                fileName = $"GameSave";
-            }
-            else
-            {
-                fileName = $"{SaveFileNameTextBox.Text}";
-            }
-            return fileName;
-        }
-        private void AutoSaveToFile()
-        {
-            if (AutoSaveBox.Checked)
-            {
-                string fileName = GetSaveFileName();
-                UtilOps.SaveFile(fileName, true);
-            }
-        }
         private void DeleteTempFilesAfterThisTurn(int currentTurn)
         {
             UtilOps.DeleteTempFilesAfterTurn(currentTurn);
@@ -230,18 +268,36 @@ namespace ChineseChess
             Turn currentTurnState = new Turn(this.currentTurn, this.moveSide, this.board.SaveGame().ToList());
             currentTurnState.SaveToFile();
             this.turnRecord.Add(currentTurnState);
-            this.AddTurnBoxItem(this.currentTurn);
+            SendDataToServerAsync(currentTurnState);
         }
 
         #endregion
 
+        #region Game Management
+
+        private void LoadTurn(Turn turn)
+        {
+            this.turnRecord.Add(turn);
+            var selectedTurn = this.turnRecord.Last();
+            this.ClearBoard();
+            this.board.LoadGame(selectedTurn.BoardState);
+            this.currentTurn = selectedTurn.TurnNumber;
+            this.moveSide = selectedTurn.WhosTurn;
+            this.LoadBoardSlate(this.board);
+            // player on only use stuff on his/her turn
+            if (moveSide == playerSide)
+            {
+                this.board.EnableMoveAblePieces(this.moveSide);
+            }
+            else
+            {
+                this.board.DisableAllPieces();
+            }
+            this.UpdateTurnLabel();
+        }
+
         private void EndTurn()
         {
-            TurnBox.Items.Clear();
-            for (int i = 1; i <= this.currentTurn; i++)
-            {
-                this.AddTurnBoxItem(i);
-            }
             var currentTurn = this.turnRecord.FindIndex(x => x.TurnNumber == this.currentTurn);
             var updatedTurnRecord = this.turnRecord.Take(currentTurn + 1);
             this.turnRecord = updatedTurnRecord.ToList();
@@ -256,6 +312,8 @@ namespace ChineseChess
             this.board.ClearBoard();
             this.chessPiecePics.Clear();
         }
+
+        #endregion
 
         #region Events and Handler
         private void AddedEventHandlerToObjs<T>(PictureBox pictureBox, T obj)
@@ -321,7 +379,6 @@ namespace ChineseChess
                         this.UpdateTurnLabel();
                     }
                     this.DeleteTempFilesAfterThisTurn(this.currentTurn);
-                    this.AutoSaveToFile();
                 }
             }
         }
@@ -350,85 +407,12 @@ namespace ChineseChess
         {
             return Convert.ToInt32(turnBox.SelectedItem.ToString().Split(' ').Last());
         }
-        private void TurnBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            this.board.ClearAllSelection();
-            this.board.ClearAllValidMove();
-            var box = (ComboBox)sender;
-            int turnNumber = GetTurnNumber(box);
-            var selectedTurn = this.turnRecord.Where(x => x.TurnNumber == turnNumber).FirstOrDefault();
-            this.ClearBoard();
-            this.board.LoadGame(selectedTurn.BoardState);
-            this.currentTurn = selectedTurn.TurnNumber;
-            this.moveSide = selectedTurn.WhosTurn;
-            this.LoadBoardSlate(this.board);
-            this.board.EnableMoveAblePieces(this.moveSide);
-            this.UpdateTurnLabel();
-        }
 
-        private void SaveButton_Click(object sender, EventArgs e)
-        {
-            string fileName = GetSaveFileName();
-            if (System.IO.File.Exists(FilePaths.rootSaveFilePath + fileName + ".sav"))
-            {
-                var overwrite = MessageBox.Show("Save file exist. Overwrite existing file?", "Overwrite file", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (overwrite == DialogResult.Yes)
-                {
-                    UtilOps.SaveFile(fileName, true);
-                    SaveGameMessage();
-                }
-                else if (overwrite == DialogResult.No)
-                {
-                    UtilOps.SaveFile(fileName, false);
-                    SaveGameMessage();
-                }
-            }
-            else
-            {
-                UtilOps.SaveFile(fileName, false);
-                SaveGameMessage();
-            }
-        }
         private void SaveGameMessage()
         {
             MessageBox.Show("Game saved", "Game saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        private void RestartButton_Click(object sender, EventArgs e)
-        {
-            UtilOps.ClearTempFolder();
-            this.board.ClearAllSelection();
-            this.board.ClearAllValidMove();
-            this.turnRecord = this.turnRecord.Where(x => x.TurnNumber == 1).ToList();
-            var selectedTurn = this.turnRecord.FirstOrDefault();
-            this.ClearBoard();
-            this.board.LoadGame(selectedTurn.BoardState);
-            this.currentTurn = selectedTurn.TurnNumber;
-            this.moveSide = selectedTurn.WhosTurn;
-            this.LoadBoardSlate(this.board);
-            this.board.EnableMoveAblePieces(this.moveSide);
-            this.UpdateTurnLabel();
-            TurnBox.Items.Clear();
-            this.SaveState();
-        }
-
-        private void LoadButton_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = FilePaths.rootSaveFilePath;
-            openFileDialog.Title = GlobalVariables.LoadDialogTitle;
-            openFileDialog.Filter = GlobalVariables.LoadDialogFliter;
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                UtilOps.ClearTempFolder();
-                string saveFileName = openFileDialog.FileName;
-                this.LoadSave(saveFileName);
-                TurnBox.Items.Clear();
-                this.AddAllTurnsToTurnBox();
-            }
-        }
 
         #endregion
-
     }
 }

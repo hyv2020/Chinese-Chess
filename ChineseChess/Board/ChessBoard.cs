@@ -9,19 +9,6 @@ namespace ChineseChess
     public class ChessBoard
     {
         public List<List<Cell>> Cells { get; set; }
-        private static List<string> defaultStart = new List<string>()
-        {
-            "15 11 12 13 16 13 12 11 15",
-            "0 0 0 0 0 0 0 0 0",
-            "0 14 0 0 0 0 0 14 0",
-            "10 0 10 0 10 0 10 0 10",
-            "0 0 0 0 0 0 0 0 0",
-            "0 0 0 0 0 0 0 0 0",
-            "00 0 00 0 00 0 00 0 00",
-            "0 04 0 0 0 0 0 04 0",
-            "0 0 0 0 0 0 0 0 0",
-            "05 01 02 03 06 03 02 01 05",
-        };
         public ChessBoard()
         {
             this.Cells = new List<List<Cell>>();
@@ -37,7 +24,7 @@ namespace ChineseChess
         }
         public void LoadGame(List<string> matchData = null)
         {
-            matchData = matchData ?? defaultStart;
+            matchData = matchData ?? GameCommons.DefaultVariables.defaultBoardStart;
             List<List<string>> board = new List<List<string>>();
             foreach (var row in matchData)
             {
