@@ -19,6 +19,5 @@
         public const int ChessToCell = (CellSize - ChessSize) / 2;
         public const int IndicatorToCell = (CellSize - LegalMoveBoxSize) / 2;
         public const string LoadDialogTitle = "Load Save Files";
-        public const string LoadDialogFliter = "sav files (*.sav)|*.sav|All files (*.*)|*.*";
     }
 }

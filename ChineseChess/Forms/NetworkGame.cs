@@ -4,7 +4,6 @@ using GameServer;
 using NetworkCommons;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -21,6 +20,7 @@ namespace ChineseChess.Forms
         AsynchronousClient client;
         bool gameStarted = false;
         bool host;
+        public bool clientConnected = true;
         Side playerSide;
         ChessBoard board;
         Side moveSide;
@@ -46,7 +46,7 @@ namespace ChineseChess.Forms
             client.RegisterObserver(this);
             UpdatePlayerLabel();
             UpdateTurnLabel();
-            this.gameStarted= true;
+            this.gameStarted = true;
 
         }
         private void NetworkGame_Load(object sender, EventArgs e)
@@ -127,23 +127,37 @@ namespace ChineseChess.Forms
                     }
                     var connectServer = client.ConnectAsync();
                     client.RegisterObserver(this);
-                    await connectServer;
                     if (!this.host)
                     {
                         ConnectionStatusLabel.ForeColor = Color.Green;
                         ConnectionStatusLabel.Text = "Joined " + serverIP;
                     }
+                    await connectServer;
+                    
                 }
                 catch (Exception ex)
                 {
                     attempts++;
                     Debug.WriteLine($"{serverIP} client connection failed");
                     Debug.WriteLine($"{ex.GetType()} : {ex.Message}");
-                    Debug.WriteLine($"Attempt {attempts} to connect to {serverIP} again...");
-                    client.Disconnect();
-                    ConnectionStatusLabel.ForeColor = Color.Red;
-                    ConnectionStatusLabel.Text = $"Retry attempt {attempts} to join" + serverIP;
-                    ClientStart(serverIP);
+                    var failedConnection = MessageBox.Show("Failed to connect to server. Do you want to try again?", 
+                        "Server Connection Fail", MessageBoxButtons.YesNo, MessageBoxIcon.Stop);
+                    if (failedConnection == DialogResult.Yes)
+                    {
+                        Debug.WriteLine($"Attempt {attempts} to connect to {serverIP} again...");
+                        client.Disconnect();
+                        ConnectionStatusLabel.ForeColor = Color.Red;
+                        ConnectionStatusLabel.Text = $"Retry attempt {attempts} to join" + serverIP;
+                        ClientStart(serverIP);
+                    }
+                    else
+                    {
+                        client.Disconnect();
+                        this.clientConnected= false;
+                        this.Visible= false;
+                        this.Close();
+                        this.Dispose();
+                    }
                 }
             }
         }
@@ -181,7 +195,7 @@ namespace ChineseChess.Forms
         }
         private async Task SendDataToServerAsync(object data)
         {
-            if(client != null)
+            if (client != null)
             {
                 var sendData = client.SendMessageAsync(data);
                 await sendData;
@@ -459,7 +473,18 @@ namespace ChineseChess.Forms
 
         private void NetworkGame_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+            var save = MessageBox.Show("Do you want to save game before quitting?", "Save game", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (save == DialogResult.Yes)
+            {
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                saveFileDialog1.Filter = GameCommons.DefaultVariables.LoadDialogFliter;
+                saveFileDialog1.Title = "Save Chess Game";
+                saveFileDialog1.ShowDialog();
+                if (saveFileDialog1.FileName != "")
+                {
+                    UtilOps.SaveFile(saveFileDialog1.FileName, true);
+                }
+            }
         }
     }
 }

@@ -53,7 +53,7 @@ namespace GameClient
                     // If the connection was lost, the loop will start over
                 }
             }
-            
+
         }
 
         public async Task SendMessageAsync(object message)
@@ -114,18 +114,18 @@ namespace GameClient
         public void Disconnect()
         {
             streamOpened = false;
-            if(stream!= null)
+            if (stream != null)
             {
                 stream.Close();
                 stream.Dispose();
                 stream = null;
             }
-            if(tcpClient!= null)
+            if (tcpClient != null)
             {
                 tcpClient.Close();
                 tcpClient.Dispose();
                 tcpClient = null;
-            } 
+            }
         }
 
 

@@ -416,7 +416,7 @@ namespace ChineseChess
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = FilePaths.rootSaveFilePath;
             openFileDialog.Title = GlobalVariables.LoadDialogTitle;
-            openFileDialog.Filter = GlobalVariables.LoadDialogFliter;
+            openFileDialog.Filter = GameCommons.DefaultVariables.LoadDialogFliter;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {

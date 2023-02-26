@@ -17,5 +17,7 @@ namespace GameCommons
             "0 0 0 0 0 0 0 0 0",
             "05 01 02 03 06 03 02 01 05",
         };
+        public const string LoadDialogFliter = "sav files (*.sav)|*.sav|All files (*.*)|*.*";
+
     }
 }

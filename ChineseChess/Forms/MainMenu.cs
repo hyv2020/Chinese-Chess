@@ -15,9 +15,7 @@ namespace ChineseChess
         {
             Game newGame = new Game();
             newGame.Show();
-            this.Visible = false;
-            this.Close();
-            this.Dispose();
+            CloseForm();
         }
 
         private void QuitButton_Click(object sender, EventArgs e)
@@ -41,16 +39,14 @@ namespace ChineseChess
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = FilePaths.rootSaveFilePath;
             openFileDialog.Title = GlobalVariables.LoadDialogTitle;
-            openFileDialog.Filter = GlobalVariables.LoadDialogFliter;
+            openFileDialog.Filter = GameCommons.DefaultVariables.LoadDialogFliter;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string saveFileName = openFileDialog.FileName;
                 Game newGame = new Game(saveFileName);
                 newGame.Show();
-                this.Visible = false;
-                this.Close();
-                this.Dispose();
+                CloseForm();
             }
         }
 
@@ -58,9 +54,14 @@ namespace ChineseChess
         {
             NetworkForm networkForm = new NetworkForm();
             networkForm.Show();
-
+            //CloseForm();
         }
 
-
+        private void CloseForm()
+        {
+            this.Visible = false;
+            this.Close();
+            this.Dispose();
+        }
     }
 }
