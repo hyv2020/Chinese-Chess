@@ -1,20 +1,19 @@
-﻿using GameClient;
+﻿using ChineseChess.Forms;
+using GameClient;
+using GameCommons;
 using GameServer;
+using NetworkCommons;
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Windows.Forms;
-using GameCommons;
-using System.ComponentModel;
-using System.IO;
-using System.Text;
-using NetworkCommons;
-using ChineseChess.Forms;
 
 namespace ChineseChess
 {
-    public partial class NetworkForm : Form, INetworkObserver
+    public partial class NetworkForm : Form
     {
-        AsynchronousTCPListener listener;
         AsynchronousClient client;
         public NetworkForm()
         {
@@ -25,9 +24,9 @@ namespace ChineseChess
         {
             NetworkGame game = new NetworkGame();
             game.Show();
-            //this.Visible = false;
-            //this.Close();
-            //this.Dispose();
+            this.Visible = false;
+            this.Close();
+            this.Dispose();
             //listener= new AsynchronousTCPListener();
             //var listen = listener.StartListeningAsync();
             //await listen;
@@ -35,25 +34,38 @@ namespace ChineseChess
 
         private async void JoinGameButton_Click(object sender, EventArgs e)
         {
+            if (ServerIPTextBox.Text.Count() > 0 && IPAddress.TryParse(ServerIPTextBox.Text, out var iPAddress))
+            {
+                NetworkGame game = new NetworkGame(ServerIPTextBox.Text);
+                game.Show();
+                this.Visible = false;
+                this.Close();
+                this.Dispose();
+            }
+            else
+            {
+                MessageBox.Show("Invalid IP", "Invalidate IP", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            /*
+            client = new AsynchronousClient("192.168.1.0");
             try
             {
-                // ip address of current dervice
-                string localIP = NetworkCommons.IP.GetCurrentMachineIP();
-                client = new AsynchronousClient(ServerIPTextBox.Text);
-                client.RegisterObserver(this);
-                var connectServer = client.ConnectAsync(ServerIPTextBox.Text);
-                await connectServer;
+                await client.ConnectAsync();
+
             }
-            catch
+            catch (ArgumentNullException ex)
             {
-                Debug.WriteLine($"{ServerIPTextBox.Text} connection failed");
+                Debug.WriteLine("ArgumentNullException: {0}", ex);
             }
+            catch (SocketException ex)
+            {
+                Debug.WriteLine("SocketException: {0}", ex);
+            }
+            */
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            listener.StopListening();
-            client.UnregisterObserver(this);
             client.Disconnect();
             client = null;
             this.Close();
@@ -61,20 +73,7 @@ namespace ChineseChess
         }
         private void NetworkForm_Load(object sender, EventArgs e)
         {
-            
-        }
-        public void OnTcpDataReceived(object data)
-        {
-            if(data as Turn != null)
-            {
 
-            }
-            Debug.WriteLine($"Observer Received data: {data}");
-        }
-        private async void ClientSendDataButton_Click(object sender, EventArgs e)
-        {
-            var sendData = client.SendMessageAsync("test");
-            await sendData;
         }
     }
 }

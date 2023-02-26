@@ -25,7 +25,7 @@ namespace GameCommons
         public Turn(Side side)
         {
             TurnNumber = 1;
-            WhosTurn= side;
+            WhosTurn = side;
             BoardState = DefaultVariables.defaultBoardStart;
         }
         public void SaveToFile()
@@ -38,45 +38,6 @@ namespace GameCommons
                     outputFile.WriteLine(row);
                 }
             }
-        }
-        public byte[] ToByteArray()
-        {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (var memoryStream = new MemoryStream())
-            {
-                binaryFormatter.Serialize(memoryStream, this);
-                return memoryStream.ToArray();
-            }
-        }
-        /// <summary>
-        /// Function to get object from byte array
-        /// </summary>
-        /// <param name="byteArray">byte array to get object</param>
-        /// <returns>object</returns>
-        public static Turn ByteArrayToObject(byte[] byteArray)
-        {
-            try
-            {
-                // convert byte array to memory stream
-                MemoryStream memoryStream = new MemoryStream(byteArray);
-
-                // create new BinaryFormatter
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-
-                // set memory stream position to starting point
-                memoryStream.Position = 0;
-
-                // Deserializes a stream into an object graph and return as a object.
-                return binaryFormatter.Deserialize(memoryStream) as Turn;
-            }
-            catch (Exception exception)
-            {
-                // Error
-                Debug.WriteLine("Exception caught in process: {0}", exception.ToString());
-            }
-
-            // Error occured, return null
-            return null;
         }
     }
 }

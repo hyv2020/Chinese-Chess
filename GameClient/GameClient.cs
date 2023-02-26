@@ -1,73 +1,59 @@
-﻿using GameCommons;
-using NetworkCommons;
+﻿using NetworkCommons;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Net.Sockets;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace GameClient
 {
-    public class AsynchronousClient: NetworkObserver
+    public class AsynchronousClient : NetworkObserver
     {
         string serverIP;
         TcpClient tcpClient;
         NetworkStream stream;
         bool streamOpened = false;
-        bool clientConnected = false;
-
 
         public AsynchronousClient(string server)
         {
             this.serverIP = server;
         }
-        public async Task ConnectAsync(string message)
+        public async Task ConnectAsync()
         {
-            try
-            {
-                // Create a TcpClient.
-                // Note, for this client to work you need to have a TcpServer
-                // connected to the same address as specified by the server, port
-                // combination.
-                Int32 port = Ports.remotePort;
+            // Create a TcpClient.
+            // Note, for this client to work you need to have a TcpServer
+            // connected to the same address as specified by the server, port
+            // combination.
+            Int32 port = Ports.remotePort;
 
-                // Not a using declaration to the instance stays connected.
-                tcpClient = new TcpClient(serverIP, port);
-                while (true)
+            // Not a using declaration to the instance stays connected.
+            Debug.WriteLine($"Client connecting to: {serverIP}");
+            tcpClient = new TcpClient(serverIP, port);
+            while (true)
+            {
+                try
                 {
-                    try
+                    if (!tcpClient.Connected)
                     {
-                        if (!tcpClient.Connected)
-                        {
-                            tcpClient.Connect(serverIP, port);
-                            clientConnected= true;
-                        }
-                        await Listen();
-                        // Send and receive data here...
-                        //await SendMessageAsync(new Turn());
-                        // Close the stream and the client when finished
-                        //stream.Close();
+                        tcpClient.Connect(serverIP, port);
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        // Handle any exceptions here...
-                        // If the connection was lost, the loop will start over
-                    }
-                }
+                        Debug.WriteLine($"Client connected to: {serverIP}");
 
+                    }
+                    await Listen();
+                    // Send and receive data here...
+                    //await SendMessageAsync(new Turn());
+                    // Close the stream and the client when finished
+                    //stream.Close();
+                }
+                catch
+                {
+                    // Handle any exceptions here...
+                    // If the connection was lost, the loop will start over
+                }
             }
-            catch (ArgumentNullException e)
-            {
-                Debug.WriteLine("ArgumentNullException: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                Debug.WriteLine("SocketException: {0}", e);
-            }
+            
         }
 
         public async Task SendMessageAsync(object message)
@@ -78,7 +64,6 @@ namespace GameClient
                 // Note, for this client to work you need to have a TcpServer
                 // connected to the same address as specified by the server, port
                 // combination.
-                Int32 port = Ports.remotePort;
 
                 // Prefer a using declaration to ensure the instance is Disposed later.
                 // Translate the passed message and store it as a Byte array.
@@ -110,8 +95,8 @@ namespace GameClient
         }
         private async Task Listen()
         {
-            streamOpened= true;
-            while(streamOpened)
+            streamOpened = true;
+            while (streamOpened)
             {
                 stream = tcpClient.GetStream();
                 // Buffer to store the response bytes.
@@ -124,20 +109,25 @@ namespace GameClient
                 Debug.WriteLine($"Received: {responseData}", this.serverIP.ToString());
 
             }
-            
+
         }
         public void Disconnect()
         {
-            streamOpened= false;
-            stream.Close();
-            stream.Dispose();
-            stream = null;
-            clientConnected= false;
-            tcpClient.Close();
-            tcpClient.Dispose();
-            tcpClient = null;
+            streamOpened = false;
+            if(stream!= null)
+            {
+                stream.Close();
+                stream.Dispose();
+                stream = null;
+            }
+            if(tcpClient!= null)
+            {
+                tcpClient.Close();
+                tcpClient.Dispose();
+                tcpClient = null;
+            } 
         }
 
-        
+
     }
 }

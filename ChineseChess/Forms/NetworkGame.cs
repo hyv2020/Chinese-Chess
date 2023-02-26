@@ -9,9 +9,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -29,7 +27,6 @@ namespace ChineseChess.Forms
         List<PictureBox> chessPiecePics = new List<PictureBox>();
         int currentTurn = 1;
         List<Turn> turnRecord = new List<Turn>();
-        BackgroundWorker worker;
         public NetworkGame()
         {
             InitializeComponent();
@@ -43,36 +40,42 @@ namespace ChineseChess.Forms
             UtilOps.CheckSaveDirectory();
             UtilOps.ClearTempFolder();
             this.board = new ChessBoard();
-            ClientStartAsync(connectionIP);
+            this.AddCellsToControl();
+            ClientStart(connectionIP);
+            client.SendMessageAsync("1");
+            client.RegisterObserver(this);
+            UpdatePlayerLabel();
+            UpdateTurnLabel();
+            this.gameStarted= true;
 
         }
         private void NetworkGame_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         #region Initialise Game
-        private void CheckGameStart()
-        {
 
-        }
         private async void HostInitialise()
         {
             this.board = new ChessBoard();
             listener = new AsynchronousTCPListener();
+            listener.RegisterObserver(this);
             this.AddCellsToControl();
             ServerStartAsync();
             string localIP = NetworkCommons.IP.GetCurrentMachineIP();
-            ClientStartAsync(localIP);
             this.host = true;
             this.moveSide = RandomStart();
             var playerSide = RandomStart();
-            await SendDataToServerAsync(playerSide);
-            this.playerSide= playerSide;
+            this.playerSide = playerSide;
+            this.listener.hostStartSide = playerSide;
             UpdatePlayerLabel(playerSide);
-            Turn startTurn = new Turn(this.moveSide);
-            await SendDataToServerAsync(startTurn);
+            Turn startTurn = new Turn(this.currentTurn, this.moveSide, GameCommons.DefaultVariables.defaultBoardStart);
+            this.listener.hostStartTurn = startTurn;
             UpdateTurnLabel();
+            ConnectionStatusLabel.ForeColor = Color.Green;
+            ConnectionStatusLabel.Text = "Hosting at " + localIP;
+            LoadTurn(startTurn);
         }
 
         private void UpdatePlayerLabel(Side? side = null)
@@ -101,24 +104,47 @@ namespace ChineseChess.Forms
             await listen;
         }
 
+        int attempts = 1;
+
         /// <summary>
         /// Connect client to server
         /// </summary>
         /// <param name="serverIP"></param>
-        private async void ClientStartAsync(string serverIP)
+        private void ClientStart(string serverIP)
         {
-            try
+            TryConnectAsync();
+            async void TryConnectAsync()
             {
-                // ip address of current dervice
-                string localIP = NetworkCommons.IP.GetCurrentMachineIP();
-                client = new AsynchronousClient(serverIP);
-                var connectServer = client.ConnectAsync(serverIP);
-                client.RegisterObserver(this);
-                await connectServer;
-            }
-            catch
-            {
-                Debug.WriteLine($"{serverIP} client connection failed");
+                try
+                {
+                    // ip address of current dervice
+                    string localIP = NetworkCommons.IP.GetCurrentMachineIP();
+                    client = new AsynchronousClient(serverIP);
+                    if (!this.host)
+                    {
+                        ConnectionStatusLabel.ForeColor = Color.Red;
+                        ConnectionStatusLabel.Text = "Joining " + serverIP;
+                    }
+                    var connectServer = client.ConnectAsync();
+                    client.RegisterObserver(this);
+                    await connectServer;
+                    if (!this.host)
+                    {
+                        ConnectionStatusLabel.ForeColor = Color.Green;
+                        ConnectionStatusLabel.Text = "Joined " + serverIP;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    attempts++;
+                    Debug.WriteLine($"{serverIP} client connection failed");
+                    Debug.WriteLine($"{ex.GetType()} : {ex.Message}");
+                    Debug.WriteLine($"Attempt {attempts} to connect to {serverIP} again...");
+                    client.Disconnect();
+                    ConnectionStatusLabel.ForeColor = Color.Red;
+                    ConnectionStatusLabel.Text = $"Retry attempt {attempts} to join" + serverIP;
+                    ClientStart(serverIP);
+                }
             }
         }
 
@@ -128,38 +154,43 @@ namespace ChineseChess.Forms
             {
                 LoadTurn(data as Turn);
             }
-            else if(int.TryParse(data.ToString(), out int clientCount))
+            else if (int.TryParse(data.ToString(), out int clientCount))
             {
-                if(clientCount == 2)
+                if (clientCount == 1 && !this.gameStarted)
                 {
-                    this.gameStarted= true;
+                    this.gameStarted = true;
                 }
             }
             else
             {
                 var recievedSide = (Side)Enum.Parse(typeof(Side), data.ToString());
-                if (this.host)
+                if (!this.host)
                 {
-                    this.playerSide= recievedSide;
-                }
-                else
-                {
-                    if(recievedSide == Side.Red)
+                    if (recievedSide == Side.Red)
                     {
-                        this.playerSide= Side.Black;
+                        this.playerSide = Side.Black;
                     }
                     else
                     {
-                        this.playerSide= Side.Red;
+                        this.playerSide = Side.Red;
                     }
                 }
+                UpdatePlayerLabel();
             }
             Debug.WriteLine($"Observer Received data: {data}");
         }
-        private async Task SendDataToServerAsync(object data) 
+        private async Task SendDataToServerAsync(object data)
         {
-            var sendData = client.SendMessageAsync(data);
-            await sendData;
+            if(client != null)
+            {
+                var sendData = client.SendMessageAsync(data);
+                await sendData;
+            }
+            else
+            {
+                var sendData = listener.RedirectToClientAsync(data);
+                await sendData;
+            }
         }
 
         #endregion
@@ -173,7 +204,7 @@ namespace ChineseChess.Forms
             //red starts if smaller than 5, black starts if greater
             if (whoStart < 5)
             {
-                 return Side.Red;
+                return Side.Red;
             }
             else
             {
@@ -412,11 +443,6 @@ namespace ChineseChess.Forms
             }
         }
 
-        private int GetTurnNumber(ComboBox turnBox)
-        {
-            return Convert.ToInt32(turnBox.SelectedItem.ToString().Split(' ').Last());
-        }
-
         private void SaveGameMessage()
         {
             MessageBox.Show("Game saved", "Game saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -429,6 +455,11 @@ namespace ChineseChess.Forms
         {
             UtilOps.ClearTempFolder();
             System.Windows.Forms.Application.Exit();
+        }
+
+        private void NetworkGame_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
         }
     }
 }

@@ -31,7 +31,6 @@
             this.HostGameButton = new System.Windows.Forms.Button();
             this.JoinGameButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
-            this.ClientSendDataButton = new System.Windows.Forms.Button();
             this.ServerIPTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -66,16 +65,6 @@
             this.CancelButton.UseVisualStyleBackColor = true;
             this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // ClientSendDataButton
-            // 
-            this.ClientSendDataButton.Location = new System.Drawing.Point(72, 183);
-            this.ClientSendDataButton.Name = "ClientSendDataButton";
-            this.ClientSendDataButton.Size = new System.Drawing.Size(169, 96);
-            this.ClientSendDataButton.TabIndex = 3;
-            this.ClientSendDataButton.Text = "Client Send Data";
-            this.ClientSendDataButton.UseVisualStyleBackColor = true;
-            this.ClientSendDataButton.Click += new System.EventHandler(this.ClientSendDataButton_Click);
-            // 
             // ServerIPTextBox
             // 
             this.ServerIPTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -101,7 +90,6 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ServerIPTextBox);
-            this.Controls.Add(this.ClientSendDataButton);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.JoinGameButton);
             this.Controls.Add(this.HostGameButton);
@@ -118,7 +106,6 @@
         private System.Windows.Forms.Button HostGameButton;
         private System.Windows.Forms.Button JoinGameButton;
         private System.Windows.Forms.Button CancelButton;
-        private System.Windows.Forms.Button ClientSendDataButton;
         private System.Windows.Forms.TextBox ServerIPTextBox;
         private System.Windows.Forms.Label label1;
     }

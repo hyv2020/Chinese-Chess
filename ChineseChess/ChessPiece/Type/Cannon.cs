@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using GameCommons;
+﻿using GameCommons;
+using System.Collections.Generic;
 
 namespace ChineseChess
 {

@@ -1,5 +1,5 @@
-﻿using System.Windows.Forms;
-using GameCommons;
+﻿using GameCommons;
+using System.Windows.Forms;
 
 namespace ChineseChess
 {
