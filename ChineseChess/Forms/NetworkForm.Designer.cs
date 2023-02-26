@@ -94,7 +94,7 @@
             this.Controls.Add(this.JoinGameButton);
             this.Controls.Add(this.HostGameButton);
             this.Name = "NetworkForm";
-            this.Text = "Form1";
+            this.Text = "Chinese Chess";
             this.Load += new System.EventHandler(this.NetworkForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

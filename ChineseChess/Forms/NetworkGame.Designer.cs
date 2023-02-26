@@ -120,7 +120,7 @@
             this.Controls.Add(this.TurnLabel);
             this.Controls.Add(this.QuitButton);
             this.Name = "NetworkGame";
-            this.Text = "NetworkGame";
+            this.Text = "Chinese Chess";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NetworkGame_FormClosing);
             this.Load += new System.EventHandler(this.NetworkGame_Load);
             this.ResumeLayout(false);

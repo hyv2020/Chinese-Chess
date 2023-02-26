@@ -41,8 +41,7 @@ namespace ChineseChess
         {
             this.Close();
             this.Dispose();
-            MainMenu mainMenu = new MainMenu();
-            mainMenu.Show();
+            Program.mainMenu.Visible = true;
         }
         private void NetworkForm_Load(object sender, EventArgs e)
         {

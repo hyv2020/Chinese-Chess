@@ -54,14 +54,14 @@ namespace ChineseChess
         {
             NetworkForm networkForm = new NetworkForm();
             networkForm.Show();
-            //CloseForm();
+            CloseForm();
         }
 
         private void CloseForm()
         {
             this.Visible = false;
-            this.Close();
-            this.Dispose();
+            //this.Close();
+            //this.Dispose();
         }
     }
 }
