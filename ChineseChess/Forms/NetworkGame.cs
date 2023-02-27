@@ -353,6 +353,7 @@ namespace ChineseChess.Forms
                 this.board.DisableAllPieces();
             }
             this.UpdateTurnLabel();
+            selectedTurn.SaveToFile();
         }
 
         private void EndTurn()
@@ -484,6 +485,7 @@ namespace ChineseChess.Forms
                     UtilOps.SaveFile(saveFileDialog1.FileName, true);
                 }
             }
+            UtilOps.ClearTempFolder();
         }
     }
 }
