@@ -35,6 +35,7 @@
             this.QuitButton = new System.Windows.Forms.Button();
             this.PlayerLabel = new System.Windows.Forms.Label();
             this.ConnectionStatusLabel = new System.Windows.Forms.Label();
+            this.PublicIPLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label8
@@ -107,11 +108,22 @@
             this.ConnectionStatusLabel.TabIndex = 16;
             this.ConnectionStatusLabel.Text = "Connection Status";
             // 
+            // PublicIPLabel
+            // 
+            this.PublicIPLabel.AutoSize = true;
+            this.PublicIPLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PublicIPLabel.Location = new System.Drawing.Point(905, 493);
+            this.PublicIPLabel.Name = "PublicIPLabel";
+            this.PublicIPLabel.Size = new System.Drawing.Size(108, 29);
+            this.PublicIPLabel.TabIndex = 17;
+            this.PublicIPLabel.Text = "Public iP";
+            // 
             // NetworkGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1262, 977);
+            this.Controls.Add(this.PublicIPLabel);
             this.Controls.Add(this.ConnectionStatusLabel);
             this.Controls.Add(this.PlayerLabel);
             this.Controls.Add(this.label8);
@@ -137,5 +149,6 @@
         private System.Windows.Forms.Button QuitButton;
         private System.Windows.Forms.Label PlayerLabel;
         private System.Windows.Forms.Label ConnectionStatusLabel;
+        private System.Windows.Forms.Label PublicIPLabel;
     }
 }

@@ -25,7 +25,7 @@ namespace ChineseChess
             if (ServerIPTextBox.Text.Count() > 0 && IPAddress.TryParse(ServerIPTextBox.Text, out var iPAddress))
             {
                 NetworkGame game = new NetworkGame(ServerIPTextBox.Text);
-                if(game.clientConnected)
+                if (game.clientConnected)
                 {
                     game.Show();
                     CloseForm();

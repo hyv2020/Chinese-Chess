@@ -75,6 +75,8 @@ namespace ChineseChess.Forms
             UpdateTurnLabel();
             ConnectionStatusLabel.ForeColor = Color.Green;
             ConnectionStatusLabel.Text = "Hosting at " + localIP;
+            PublicIPLabel.ForeColor = Color.Green;
+            PublicIPLabel.Text = "Public IP: " + NetworkCommons.IP.GetPublicIpAddress();
             LoadTurn(startTurn);
         }
 
@@ -122,25 +124,22 @@ namespace ChineseChess.Forms
                     client = new AsynchronousClient(serverIP);
                     if (!this.host)
                     {
-                        ConnectionStatusLabel.ForeColor = Color.Red;
-                        ConnectionStatusLabel.Text = "Joining " + serverIP;
+                        ConnectionStatusLabel.ForeColor = Color.Green;
+                        ConnectionStatusLabel.Text = "Joined " + serverIP;
+                        PublicIPLabel.ForeColor = Color.Green;
+                        PublicIPLabel.Text = "Public IP: " + NetworkCommons.IP.GetPublicIpAddress();
                     }
                     var connectServer = client.ConnectAsync();
                     client.RegisterObserver(this);
-                    if (!this.host)
-                    {
-                        ConnectionStatusLabel.ForeColor = Color.Green;
-                        ConnectionStatusLabel.Text = "Joined " + serverIP;
-                    }
                     await connectServer;
-                    
+                    // code after this line dont run
                 }
                 catch (Exception ex)
                 {
                     attempts++;
                     Debug.WriteLine($"{serverIP} client connection failed");
                     Debug.WriteLine($"{ex.GetType()} : {ex.Message}");
-                    var failedConnection = MessageBox.Show("Failed to connect to server. Do you want to try again?", 
+                    var failedConnection = MessageBox.Show("Failed to connect to server. Do you want to try again?",
                         "Server Connection Fail", MessageBoxButtons.YesNo, MessageBoxIcon.Stop);
                     if (failedConnection == DialogResult.Yes)
                     {
@@ -153,8 +152,8 @@ namespace ChineseChess.Forms
                     else
                     {
                         client.Disconnect();
-                        this.clientConnected= false;
-                        this.Visible= false;
+                        this.clientConnected = false;
+                        this.Visible = false;
                         this.Close();
                         this.Dispose();
                     }
