@@ -15,8 +15,16 @@ namespace ChineseChess
             List<Cell> availableCells = new List<Cell>();
             //x axis moves
             //scan the whole axis
+            availableCells.AddRange(FindMovesEast(chessBoard));
+            availableCells.AddRange(FindMovesWest(chessBoard));
+            availableCells.AddRange(FindMovesNorth(chessBoard));
+            availableCells.AddRange(FindMovesSouth(chessBoard));
+            return FliterCellsToValidPoints(availableCells);
+        }
+        private IEnumerable<Cell> FindMovesEast(ChessBoard chessBoard)
+        {
             bool firstOccupied = false;
-            for (int i = this.X + 1; i < GlobalVariables.BoardSizeX; i++)
+            for (int i = this.X + 1; i < ChessBoard.BoardSizeX; i++)
             {
                 if (chessBoard.FindSpecificCell(i, this.Y, out var cell))
                 {
@@ -27,19 +35,23 @@ namespace ChineseChess
                             firstOccupied = true;
                             continue;
                         }
-                        availableCells.Add(cell);
+                        yield return cell;
                     }
                     else
                     {
                         if (cell.ChessPiece != null)
                         {
-                            availableCells.Add(cell);
+                            yield return cell;
                             break;
                         }
                     }
                 }
             }
-            firstOccupied = false;
+        }
+
+        private IEnumerable<Cell> FindMovesWest(ChessBoard chessBoard)
+        {
+            bool firstOccupied = false;
             for (int i = this.X - 1; i >= 0; i--)
             {
                 if (chessBoard.FindSpecificCell(i, this.Y, out var cell))
@@ -51,20 +63,24 @@ namespace ChineseChess
                             firstOccupied = true;
                             continue;
                         }
-                        availableCells.Add(cell);
+                        yield return cell;
                     }
                     else
                     {
                         if (cell.ChessPiece != null)
                         {
-                            availableCells.Add(cell);
+                            yield return cell;
                             break;
                         }
                     }
                 }
             }
-            firstOccupied = false;
-            for (int i = this.Y + 1; i < GlobalVariables.BoardSizeY; i++)
+        }
+
+        private IEnumerable<Cell> FindMovesNorth(ChessBoard chessBoard)
+        {
+            bool firstOccupied = false;
+            for (int i = this.Y + 1; i < ChessBoard.BoardSizeY; i++)
             {
                 if (chessBoard.FindSpecificCell(this.X, i, out var cell))
                 {
@@ -75,19 +91,23 @@ namespace ChineseChess
                             firstOccupied = true;
                             continue;
                         }
-                        availableCells.Add(cell);
+                        yield return cell;
                     }
                     else
                     {
                         if (cell.ChessPiece != null)
                         {
-                            availableCells.Add(cell);
+                            yield return cell;
                             break;
                         }
                     }
                 }
             }
-            firstOccupied = false;
+        }
+
+        private IEnumerable<Cell> FindMovesSouth(ChessBoard chessBoard)
+        {
+            bool firstOccupied = false;
             for (int i = this.Y - 1; i >= 0; i--)
             {
                 if (chessBoard.FindSpecificCell(this.X, i, out var cell))
@@ -99,19 +119,18 @@ namespace ChineseChess
                             firstOccupied = true;
                             continue;
                         }
-                        availableCells.Add(cell);
+                        yield return cell;
                     }
                     else
                     {
                         if (cell.ChessPiece != null)
                         {
-                            availableCells.Add(cell);
+                            yield return cell;
                             break;
                         }
                     }
                 }
             }
-            return FliterCellsToValidPoints(availableCells);
         }
     }
 }

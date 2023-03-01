@@ -8,14 +8,16 @@ namespace ChineseChess
 {
     public class ChessBoard
     {
+        public const int BoardSizeX = 9;
+        public const int BoardSizeY = 10;
         public List<List<Cell>> Cells { get; set; }
         public ChessBoard()
         {
             this.Cells = new List<List<Cell>>();
-            for (int x = 0; x < GlobalVariables.BoardSizeX; x++)
+            for (int x = 0; x < BoardSizeX; x++)
             {
                 List<Cell> column = new List<Cell>();
-                for (var y = 0; y < GlobalVariables.BoardSizeY; y++)
+                for (var y = 0; y < BoardSizeY; y++)
                 {
                     column.Add(new Cell(x, y));
                 }
@@ -100,7 +102,7 @@ namespace ChineseChess
         }
         public bool FindSpecificCell(int x, int y, out Cell cell)
         {
-            if (x < 0 || y < 0 || x > GlobalVariables.BoardSizeX - 1 || y > GlobalVariables.BoardSizeY - 1)
+            if (x < 0 || y < 0 || x > BoardSizeX - 1 || y > BoardSizeY - 1)
             {
                 cell = null;
                 return false;

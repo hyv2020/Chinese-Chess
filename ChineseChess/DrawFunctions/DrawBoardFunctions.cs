@@ -4,16 +4,26 @@ using System.Windows.Forms;
 
 namespace ChineseChess
 {
-    public static class DrawBoardFunctions
+    public static class DrawFunctions
     {
+        const int XOffset = 25;
+        const int YOffset = 25;
+        /// <summary>
+        /// size of chess piece
+        /// </summary>
+        const int ChessSize = 55;
+        //size of each square
+        const int CellSize = 65;
+        //size of legal move indicator
+        const int LegalMoveBoxSize = 25;
+
+        //extra padding to make everything snip to grid
+        const int ChessToCell = (CellSize - ChessSize) / 2;
+        const int IndicatorToCell = (CellSize - LegalMoveBoxSize) / 2;
+
         static string rootBoardImageFilePath = FilePaths.rootBoardImageFilePath;
-        static int xOffset = GlobalVariables.XOffset;
-        static int yOffset = GlobalVariables.YOffset;
-        static int cellSize = GlobalVariables.CellSize;
-        static int boardSizeX = GlobalVariables.BoardSizeX;
-        static int boardSizeY = GlobalVariables.BoardSizeY;
-        static int indicatorToCell = GlobalVariables.IndicatorToCell;
-        static int legalMoveBoxSize = GlobalVariables.LegalMoveBoxSize;
+        static int boardSizeX = ChessBoard.BoardSizeX;
+        static int boardSizeY = ChessBoard.BoardSizeY;
 
         public static PictureBox DrawBoard(int x, int y)
         {
@@ -26,12 +36,12 @@ namespace ChineseChess
                 //change name of the picturebox
                 Name = "boardTile" + x + y,
                 //size of the box
-                Size = new Size(cellSize, cellSize),
+                Size = new Size(CellSize, CellSize),
                 //colour of the box
                 BackColor = Color.Blue,
                 //the location changes to make the whole board
-                Location = new Point(xOffset + x * (cellSize),
-                yOffset + y * (cellSize)),
+                Location = new Point(XOffset + x * (CellSize),
+                YOffset + y * (CellSize)),
                 //border style
                 BorderStyle = BorderStyle.None,
                 //stretch image to fit in box
@@ -222,7 +232,7 @@ namespace ChineseChess
                 //for example "red horse"
                 Name = "legalMoveIndicator" + x + y,
                 //size of the legal move box
-                Size = new Size(legalMoveBoxSize, legalMoveBoxSize),
+                Size = new Size(LegalMoveBoxSize, LegalMoveBoxSize),
                 //colour of the box
                 BackColor = Color.Black,
                 //border style
@@ -230,13 +240,47 @@ namespace ChineseChess
                 //stretch image to fit in box
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 //location
-                Location = new Point(xOffset + indicatorToCell + x * (cellSize),
-                        yOffset + indicatorToCell + y * (cellSize)),
+                Location = new Point(XOffset + IndicatorToCell + x * (CellSize),
+                        YOffset + IndicatorToCell + y * (CellSize)),
                 //hide the box
                 Visible = false
             };
             legalMoveIndicator.BringToFront();
             return legalMoveIndicator;
+        }
+
+        public static PictureBox DrawChessPiece(ChessPiece chessPiece)
+        {
+            //ideally it could use the location of the cell of the board to snap to the grid
+            //there is a loop to determine its location and draw
+            //the loop look through ChessPieceList to find out how many it needs to draw
+            //the location is set depending on colour and piece type
+
+            //show each cell as picturebox
+            //make new picturebox call chessCell
+            PictureBox chessPictureBox = new PictureBox
+            {
+                //properties of picturebox
+                //change name of the picturebox
+                //use colour and type of the piece
+                //for example "red horse"
+                Name = chessPiece.Name,
+                //size of the chess piece box
+                Size = new Size(ChessSize, ChessSize),
+                //colour of the box
+                BackColor = Color.White,
+                //border style
+                BorderStyle = BorderStyle.None,
+                //stretch image to fit in box
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Image = Image.FromFile(FilePaths.rootChessImageFilePath + $"{chessPiece.Side}{chessPiece.GetChessPieceType()}.gif"),
+                Location = new Point(XOffset + ChessToCell + chessPiece.X * CellSize, YOffset + ChessToCell + chessPiece.Y * CellSize),
+                //show the box
+                Visible = true
+
+            };
+            chessPictureBox.BringToFront();
+            return chessPictureBox;
         }
 
     }

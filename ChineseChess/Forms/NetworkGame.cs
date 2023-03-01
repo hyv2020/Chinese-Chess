@@ -24,7 +24,6 @@ namespace ChineseChess.Forms
         Side playerSide;
         ChessBoard board;
         Side moveSide;
-        List<PictureBox> chessPiecePics = new List<PictureBox>();
         int currentTurn = 1;
         List<Turn> turnRecord = new List<Turn>();
         public NetworkGame()
@@ -42,7 +41,7 @@ namespace ChineseChess.Forms
             this.board = new ChessBoard();
             this.AddCellsToControl();
             ClientStart(connectionIP);
-            client.SendMessageAsync("1");
+            client.SendMessageAsync("1").RunSynchronously();
             client.RegisterObserver(this);
             UpdatePlayerLabel();
             UpdateTurnLabel();
@@ -56,7 +55,7 @@ namespace ChineseChess.Forms
 
         #region Initialise Game
 
-        private async void HostInitialise()
+        private void HostInitialise()
         {
             this.board = new ChessBoard();
             listener = new AsynchronousTCPListener();
@@ -65,8 +64,8 @@ namespace ChineseChess.Forms
             ServerStartAsync();
             string localIP = NetworkCommons.IP.GetCurrentMachineIP();
             this.host = true;
-            this.moveSide = RandomStart();
-            var playerSide = RandomStart();
+            this.moveSide = UtilOps.RandomStart();
+            var playerSide = UtilOps.RandomStart();
             this.playerSide = playerSide;
             this.listener.hostStartSide = playerSide;
             UpdatePlayerLabel(playerSide);
@@ -209,22 +208,7 @@ namespace ChineseChess.Forms
         #endregion
 
         #region Turn Management
-        private Side RandomStart()
-        {
-            Random playerStart = new Random();
-            //create random number between 0 and 10
-            int whoStart = playerStart.Next(10);
-            //red starts if smaller than 5, black starts if greater
-            if (whoStart < 5)
-            {
-                return Side.Red;
-            }
-            else
-            {
-                return Side.Black;
-            }
 
-        }
         private void UpdateTurnLabel(Side? side = null)
         {
             if (side != null)
@@ -295,7 +279,6 @@ namespace ChineseChess.Forms
             if (cell.ChessPiece != null)
             {
                 this.Controls.Add(cell.ChessPiece.ChessPicture);
-                this.chessPiecePics.Add(cell.ChessPiece.ChessPicture);
                 AddedEventHandlerToObjs(cell.ChessPiece.ChessPicture, cell.ChessPiece);
             }
         }
@@ -303,10 +286,7 @@ namespace ChineseChess.Forms
 
         #region File Management
 
-        private void DeleteTempFilesAfterThisTurn(int currentTurn)
-        {
-            UtilOps.DeleteTempFilesAfterTurn(currentTurn);
-        }
+
         #endregion
 
         #region State Management
@@ -365,12 +345,10 @@ namespace ChineseChess.Forms
         }
         private void ClearBoard()
         {
-            foreach (var pic in this.chessPiecePics)
-            {
-                this.Controls.Remove(pic);
-            }
+            var allCells = this.board.GetAllCellsInOneList();
+            var allPieces = allCells.Where(x => x.ChessPiece != null).ToList();
+            allPieces.ForEach(c => this.Controls.Remove(c.ChessPiece.ChessPicture));
             this.board.ClearBoard();
-            this.chessPiecePics.Clear();
         }
 
         #endregion
@@ -438,7 +416,7 @@ namespace ChineseChess.Forms
                         //this.board.EnableMoveAblePieces(this.moveSide);
                         //this.UpdateTurnLabel();
                     }
-                    this.DeleteTempFilesAfterThisTurn(this.currentTurn);
+                    UtilOps.DeleteTempFilesAfterThisTurn(this.currentTurn);
                 }
             }
         }

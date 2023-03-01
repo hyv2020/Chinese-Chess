@@ -23,7 +23,7 @@ namespace ChineseChess
             this.X = x;
             this.Y = y;
             this.Side = side;
-            this.ChessPicture = DrawChessPieceFunctions.DrawChessPiece(this);
+            this.ChessPicture = DrawFunctions.DrawChessPiece(this);
             this.IsSelected = false;
             this.CanMove = false;
         }
@@ -42,7 +42,7 @@ namespace ChineseChess
             this.Side = chessPiece.Side;
             this.IsSelected = false;
             this.CanMove = false;
-            this.ChessPicture = DrawChessPieceFunctions.DrawChessPiece(this);
+            this.ChessPicture = DrawFunctions.DrawChessPiece(this);
         }
         public void RemoveChessPiecePic()
         {

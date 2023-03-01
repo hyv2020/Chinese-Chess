@@ -1,5 +1,4 @@
-﻿using GameCommons;
-using System;
+﻿using System;
 
 namespace ChineseChess
 {
@@ -7,7 +6,6 @@ namespace ChineseChess
 
     public static class ChessPieceMethods
     {
-
         public static ChessPieceType GetChessPieceType(this ChessPiece chessPiece)
         {
             if (chessPiece != null)

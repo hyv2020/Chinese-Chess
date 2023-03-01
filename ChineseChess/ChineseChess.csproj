@@ -79,6 +79,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Board\Cell.cs" />
+    <Compile Include="Board\ChessBoard.cs" />
+    <Compile Include="Board\ValidMove.cs" />
+    <Compile Include="ChessPiece\ChessPieceMethods.cs" />
+    <Compile Include="ChessPiece\Factory\ChessPiece.cs" />
+    <Compile Include="ChessPiece\Factory\ChessPieceAttr.cs" />
+    <Compile Include="ChessPiece\Factory\ChessPieceFactory.cs" />
+    <Compile Include="ChessPiece\Type\Advisor.cs" />
+    <Compile Include="ChessPiece\Type\Cannon.cs" />
+    <Compile Include="ChessPiece\Type\Chariot.cs" />
+    <Compile Include="ChessPiece\Type\General.cs" />
+    <Compile Include="ChessPiece\Type\Horse.cs" />
+    <Compile Include="ChessPiece\Type\Minister.cs" />
+    <Compile Include="ChessPiece\Type\Soldier.cs" />
+    <Compile Include="DrawFunctions\DrawBoardFunctions.cs" />
+    <Compile Include="Enum\ChessPieceType.cs" />
     <Compile Include="Forms\NetworkForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -105,23 +121,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Board\Cell.cs" />
-    <Compile Include="Board\ChessBoard.cs" />
-    <Compile Include="Board\ValidMove.cs" />
-    <Compile Include="ChessPiece\ChessPieceMethods.cs" />
-    <Compile Include="ChessPiece\Factory\ChessPieceAttr.cs" />
-    <Compile Include="ChessPiece\Type\Advisor.cs" />
-    <Compile Include="ChessPiece\Type\Cannon.cs" />
-    <Compile Include="ChessPiece\Type\Chariot.cs" />
-    <Compile Include="ChessPiece\Factory\ChessPieceFactory.cs" />
-    <Compile Include="ChessPiece\Type\General.cs" />
-    <Compile Include="ChessPiece\Type\Horse.cs" />
-    <Compile Include="ChessPiece\Factory\ChessPiece.cs" />
-    <Compile Include="ChessPiece\Type\Minister.cs" />
-    <Compile Include="ChessPiece\Type\Soldier.cs" />
-    <Compile Include="DrawFunctions\DrawBoardFunctions.cs" />
-    <Compile Include="DrawFunctions\DrawChessPieceFunctions.cs" />
-    <Compile Include="Utils\GlobalVariables.cs" />
     <Compile Include="Utils\UtilOps.cs" />
     <EmbeddedResource Include="Forms\Game.resx">
       <DependentUpon>Game.cs</DependentUpon>

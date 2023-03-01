@@ -15,22 +15,49 @@ namespace ChineseChess
             List<Cell> availableCells = new List<Cell>();
             if (this.Side == Side.Red)
             {
-                if (chessBoard.FindSpecificCell(this.X, this.Y - 1, out var cell))
-                {
-                    availableCells.Add(cell);
-                }
+                availableCells.AddRange(FindMovesSouth(chessBoard));
             }
             else
             {
-                if (chessBoard.FindSpecificCell(this.X, this.Y + 1, out var cell))
-                {
-                    availableCells.Add(cell);
-                }
+                availableCells.AddRange(FindMovesNorth(chessBoard));
             }
             availableCells.AddRange(CheckCrossRiverMoves(chessBoard));
 
             return FliterCellsToValidPoints(availableCells);
         }
+
+        private IEnumerable<Cell> FindMovesEast(ChessBoard chessBoard)
+        {
+            if (chessBoard.FindSpecificCell(this.X + 1, this.Y, out var cell))
+            {
+                yield return cell;
+            }
+        }
+
+        private IEnumerable<Cell> FindMovesWest(ChessBoard chessBoard)
+        {
+            if (chessBoard.FindSpecificCell(this.X - 1, this.Y, out var cell))
+            {
+                yield return cell;
+            }
+        }
+
+        private IEnumerable<Cell> FindMovesNorth(ChessBoard chessBoard)
+        {
+            if (chessBoard.FindSpecificCell(this.X, this.Y + 1, out var cell))
+            {
+                yield return cell;
+            }
+        }
+
+        private IEnumerable<Cell> FindMovesSouth(ChessBoard chessBoard)
+        {
+            if (chessBoard.FindSpecificCell(this.X, this.Y - 1, out var cell))
+            {
+                yield return cell;
+            }
+        }
+
         private List<Cell> CheckCrossRiverMoves(ChessBoard chessBoard)
         {
             List<Cell> availableCells = new List<Cell>();
@@ -38,14 +65,8 @@ namespace ChineseChess
             {
                 if (currentCell.Side != this.Side)
                 {
-                    if (chessBoard.FindSpecificCell(this.X + 1, this.Y, out var cell))
-                    {
-                        availableCells.Add(cell);
-                    }
-                    if (chessBoard.FindSpecificCell(this.X - 1, this.Y, out cell))
-                    {
-                        availableCells.Add(cell);
-                    }
+                    availableCells.AddRange(FindMovesEast(chessBoard));
+                    availableCells.AddRange(FindMovesWest(chessBoard));
                 }
             }
             return availableCells;

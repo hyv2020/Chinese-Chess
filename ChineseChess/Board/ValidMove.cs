@@ -14,7 +14,7 @@ namespace ChineseChess
         public ValidMove(int x, int y)
         {
             isValid = false;
-            ValidMovePicBox = DrawBoardFunctions.DrawLegalMoveIndictor(x, y);
+            ValidMovePicBox = DrawFunctions.DrawLegalMoveIndictor(x, y);
         }
         public void IsValidMove()
         {

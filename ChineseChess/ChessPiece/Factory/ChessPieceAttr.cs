@@ -1,5 +1,4 @@
-﻿using GameCommons;
-using System;
+﻿using System;
 
 namespace ChineseChess
 {

@@ -28,7 +28,7 @@ namespace ChineseChess
             {
                 this.board.LoadGame();
                 this.AddAllToControl();
-                this.RandomStart();
+                this.moveSide = UtilOps.RandomStart();
                 this.UpdateTurnLabel();
                 this.SaveState();
             }
@@ -47,22 +47,7 @@ namespace ChineseChess
 
 
         #region Turn Management
-        private void RandomStart()
-        {
-            Random playerStart = new Random();
-            //create random number between 0 and 10
-            int whoStart = playerStart.Next(10);
-            //red starts if smaller than 5, black starts if greater
-            if (whoStart < 5)
-            {
-                this.moveSide = Side.Red;
-            }
-            else
-            {
-                this.moveSide = Side.Black;
-            }
 
-        }
         private void UpdateTurnLabel(Side? side = null)
         {
             if (side != null)
@@ -157,7 +142,6 @@ namespace ChineseChess
             if (cell.ChessPiece != null)
             {
                 this.Controls.Add(cell.ChessPiece.ChessPicture);
-                this.chessPiecePics.Add(cell.ChessPiece.ChessPicture);
                 AddedEventHandlerToObjs(cell.ChessPiece.ChessPicture, cell.ChessPiece);
             }
         }
@@ -206,10 +190,7 @@ namespace ChineseChess
                 UtilOps.SaveFile(fileName, true);
             }
         }
-        private void DeleteTempFilesAfterThisTurn(int currentTurn)
-        {
-            UtilOps.DeleteTempFilesAfterTurn(currentTurn);
-        }
+
         #endregion
 
         #region State Management
@@ -249,12 +230,10 @@ namespace ChineseChess
         }
         private void ClearBoard()
         {
-            foreach (var pic in this.chessPiecePics)
-            {
-                this.Controls.Remove(pic);
-            }
+            var allCells = this.board.GetAllCellsInOneList();
+            var allPieces = allCells.Where(x => x.ChessPiece != null).ToList();
+            allPieces.ForEach(c => this.Controls.Remove(c.ChessPiece.ChessPicture));
             this.board.ClearBoard();
-            this.chessPiecePics.Clear();
         }
 
         #region Events and Handler
@@ -320,7 +299,7 @@ namespace ChineseChess
                         this.board.EnableMoveAblePieces(this.moveSide);
                         this.UpdateTurnLabel();
                     }
-                    this.DeleteTempFilesAfterThisTurn(this.currentTurn);
+                    UtilOps.DeleteTempFilesAfterThisTurn(this.currentTurn);
                     this.AutoSaveToFile();
                 }
             }
@@ -415,7 +394,7 @@ namespace ChineseChess
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = FilePaths.rootSaveFilePath;
-            openFileDialog.Title = GlobalVariables.LoadDialogTitle;
+            openFileDialog.Title = GameCommons.DefaultVariables.LoadDialogTitle;
             openFileDialog.Filter = GameCommons.DefaultVariables.LoadDialogFliter;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
