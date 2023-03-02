@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 
 namespace NetworkCommons
 {
@@ -8,8 +9,14 @@ namespace NetworkCommons
     {
         public static string GetCurrentMachineIP()
         {
-            string hostName = Dns.GetHostName();
-            return Dns.GetHostByName(hostName).AddressList.First().ToString();
+            string localIP;
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                localIP = endPoint.Address.ToString();
+            }
+            return localIP;
         }
 
         public static string GetPublicIpAddress()

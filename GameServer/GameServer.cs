@@ -42,7 +42,7 @@ namespace GameServer
                     // tell second player start state
                     await RedirectToClientAsync(clients.Count, client);
                     await RedirectToClientAsync(hostStartTurn, client);
-                    await RedirectToClientAsync(hostStartSide, client);
+                    await RedirectToClientAsync(hostStartSide.ToString(), client);
                     // Start a new thread to handle communication
                     // with connected client
                     while (client.Connected)

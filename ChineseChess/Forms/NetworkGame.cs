@@ -39,9 +39,10 @@ namespace ChineseChess.Forms
             UtilOps.CheckSaveDirectory();
             UtilOps.ClearTempFolder();
             this.board = new ChessBoard();
+            this.host= false;
             this.AddCellsToControl();
             ClientStart(connectionIP);
-            client.SendMessageAsync("1").RunSynchronously();
+            client.SendMessageAsync("1");
             client.RegisterObserver(this);
             UpdatePlayerLabel();
             UpdateTurnLabel();
