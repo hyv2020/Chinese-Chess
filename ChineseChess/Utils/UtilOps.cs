@@ -1,5 +1,6 @@
 ﻿using Aspose.Zip;
 using Aspose.Zip.Saving;
+using GameCommons;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +11,27 @@ namespace ChineseChess
 {
     public static class UtilOps
     {
+        public static Side RandomStart()
+        {
+            Random playerStart = new Random();
+            //create random number between 0 and 10
+            int whoStart = playerStart.Next(10);
+            //red starts if smaller than 5, black starts if greater
+            if (whoStart <= 5)
+            {
+                return Side.Red;
+            }
+            else
+            {
+                return Side.Black;
+            }
+
+        }
+
+        public static void DeleteTempFilesAfterThisTurn(int currentTurn)
+        {
+            UtilOps.DeleteTempFilesAfterTurn(currentTurn);
+        }
         public static void CheckSaveDirectory()
         {
             if (!Directory.Exists(FilePaths.rootTempFilePath))
@@ -124,5 +146,6 @@ namespace ChineseChess
             }
             return new Turn(turn, side, boardState);
         }
+
     }
 }

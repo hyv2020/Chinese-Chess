@@ -37,6 +37,7 @@ namespace ChineseChess
             this.RulesButton = new System.Windows.Forms.Button();
             this.QuitButton = new System.Windows.Forms.Button();
             this.LoadButton = new System.Windows.Forms.Button();
+            this.NetworkModeButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -117,6 +118,17 @@ namespace ChineseChess
             this.LoadButton.UseVisualStyleBackColor = true;
             this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
             // 
+            // NetworkModeButton
+            // 
+            this.NetworkModeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.NetworkModeButton.Location = new System.Drawing.Point(48, 281);
+            this.NetworkModeButton.Name = "NetworkModeButton";
+            this.NetworkModeButton.Size = new System.Drawing.Size(277, 89);
+            this.NetworkModeButton.TabIndex = 7;
+            this.NetworkModeButton.Text = "Network Game";
+            this.NetworkModeButton.UseVisualStyleBackColor = true;
+            this.NetworkModeButton.Click += new System.EventHandler(this.NetworkModeButton_Click);
+            // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -124,6 +136,7 @@ namespace ChineseChess
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1262, 673);
+            this.Controls.Add(this.NetworkModeButton);
             this.Controls.Add(this.LoadButton);
             this.Controls.Add(this.QuitButton);
             this.Controls.Add(this.RulesButton);
@@ -150,6 +163,7 @@ namespace ChineseChess
         private System.Windows.Forms.Button RulesButton;
         private System.Windows.Forms.Button QuitButton;
         private System.Windows.Forms.Button LoadButton;
+        private System.Windows.Forms.Button NetworkModeButton;
     }
 }
 

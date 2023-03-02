@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using GameCommons;
+using System.Collections.Generic;
 
 namespace ChineseChess
 {
@@ -15,67 +15,87 @@ namespace ChineseChess
             List<Cell> availableCells = new List<Cell>();
             //x axis moves
             //scan the whole axis
-            for (int i = this.X + 1; i < GlobalVariables.BoardSizeX; i++)
+            availableCells.AddRange(FindMovesEast(chessBoard));
+            availableCells.AddRange(FindMovesWest(chessBoard));
+            availableCells.AddRange(FindMovesNorth(chessBoard));
+            availableCells.AddRange(FindMovesSouth(chessBoard));
+            return FliterCellsToValidPoints(availableCells);
+        }
+
+        private IEnumerable<Cell> FindMovesEast(ChessBoard chessBoard)
+        {
+            for (int i = this.X + 1; i < ChessBoard.BoardSizeX; i++)
             {
                 if (chessBoard.FindSpecificCell(i, this.Y, out var cell))
                 {
                     if (cell.ChessPiece != null)
                     {
-                        availableCells.Add(cell);
+                        yield return cell;
                         break;
                     }
                     else
                     {
-                        availableCells.Add(cell);
+                        yield return cell;
                     }
                 }
             }
+        }
+
+        private IEnumerable<Cell> FindMovesWest(ChessBoard chessBoard)
+        {
             for (int i = this.X - 1; i >= 0; i--)
             {
                 if (chessBoard.FindSpecificCell(i, this.Y, out var cell))
                 {
                     if (cell.ChessPiece != null)
                     {
-                        availableCells.Add(cell);
+                        yield return cell;
                         break;
                     }
                     else
                     {
-                        availableCells.Add(cell);
+                        yield return cell;
                     }
                 }
             }
-            for (int i = this.Y + 1; i < GlobalVariables.BoardSizeY; i++)
+        }
+
+        private IEnumerable<Cell> FindMovesNorth(ChessBoard chessBoard)
+        {
+            for (int i = this.Y + 1; i < ChessBoard.BoardSizeY; i++)
             {
                 if (chessBoard.FindSpecificCell(this.X, i, out var cell))
                 {
                     if (cell.ChessPiece != null)
                     {
-                        availableCells.Add(cell);
+                        yield return cell;
                         break;
                     }
                     else
                     {
-                        availableCells.Add(cell);
+                        yield return cell;
                     }
                 }
             }
+        }
+
+        private IEnumerable<Cell> FindMovesSouth(ChessBoard chessBoard)
+        {
             for (int i = this.Y - 1; i >= 0; i--)
             {
                 if (chessBoard.FindSpecificCell(this.X, i, out var cell))
                 {
                     if (cell.ChessPiece != null)
                     {
-                        availableCells.Add(cell);
+                        yield return cell;
                         break;
                     }
                     else
                     {
-                        availableCells.Add(cell);
+                        yield return cell;
                     }
                 }
             }
-            return FliterCellsToValidPoints(availableCells);
         }
     }
 }

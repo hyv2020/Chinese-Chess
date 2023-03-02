@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using GameCommons;
+using System.Collections.Generic;
 
 namespace ChineseChess
 {
@@ -15,35 +15,54 @@ namespace ChineseChess
         {
             List<Cell> availableCells = new List<Cell>();
 
+            availableCells.AddRange(FindMoveDownLeft(chessBoard));
+            availableCells.AddRange(FindMoveUpLeft(chessBoard));
+            availableCells.AddRange(FindMoveDownRight(chessBoard));
+            availableCells.AddRange(FindMoveUpRight(chessBoard));
+
+            return FliterCellsToValidPoints(availableCells);
+        }
+
+        private IEnumerable<Cell> FindMoveDownLeft(ChessBoard chessBoard)
+        {
             if (chessBoard.FindSpecificCell(this.X - 1, this.Y - 1, out var cell))
             {
                 if (cell.AdvisorArea)
                 {
-                    availableCells.Add(cell);
+                    yield return cell;
                 }
             }
-            if (chessBoard.FindSpecificCell(this.X + 1, this.Y - 1, out cell))
-            {
-                if (cell.AdvisorArea)
-                {
-                    availableCells.Add(cell);
-                }
-            }
-            if (chessBoard.FindSpecificCell(this.X - 1, this.Y + 1, out cell))
-            {
-                if (cell.AdvisorArea)
-                {
-                    availableCells.Add(cell);
-                }
-            }
-            if (chessBoard.FindSpecificCell(this.X + 1, this.Y + 1, out cell))
-            {
-                if (cell.AdvisorArea)
-                {
-                    availableCells.Add(cell);
-                }
-            }
-            return FliterCellsToValidPoints(availableCells);
         }
+        private IEnumerable<Cell> FindMoveUpLeft(ChessBoard chessBoard)
+        {
+            if (chessBoard.FindSpecificCell(this.X + 1, this.Y - 1, out var cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    yield return cell;
+                }
+            }
+        }
+        private IEnumerable<Cell> FindMoveDownRight(ChessBoard chessBoard)
+        {
+            if (chessBoard.FindSpecificCell(this.X - 1, this.Y + 1, out var cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    yield return cell;
+                }
+            }
+        }
+        private IEnumerable<Cell> FindMoveUpRight(ChessBoard chessBoard)
+        {
+            if (chessBoard.FindSpecificCell(this.X + 1, this.Y + 1, out var cell))
+            {
+                if (cell.AdvisorArea)
+                {
+                    yield return cell;
+                }
+            }
+        }
+
     }
 }

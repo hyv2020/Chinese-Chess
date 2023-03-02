@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameCommons;
+using System;
 using System.Windows.Forms;
 
 namespace ChineseChess
@@ -14,8 +15,7 @@ namespace ChineseChess
         {
             Game newGame = new Game();
             newGame.Show();
-            this.Visible = false;
-
+            CloseForm();
         }
 
         private void QuitButton_Click(object sender, EventArgs e)
@@ -38,16 +38,30 @@ namespace ChineseChess
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = FilePaths.rootSaveFilePath;
-            openFileDialog.Title = GlobalVariables.LoadDialogTitle;
-            openFileDialog.Filter = GlobalVariables.LoadDialogFliter;
+            openFileDialog.Title = GameCommons.DefaultVariables.LoadDialogTitle;
+            openFileDialog.Filter = GameCommons.DefaultVariables.LoadDialogFliter;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string saveFileName = openFileDialog.FileName;
                 Game newGame = new Game(saveFileName);
                 newGame.Show();
-                this.Visible = false;
+                CloseForm();
             }
+        }
+
+        private void NetworkModeButton_Click(object sender, EventArgs e)
+        {
+            NetworkForm networkForm = new NetworkForm();
+            networkForm.Show();
+            CloseForm();
+        }
+
+        private void CloseForm()
+        {
+            this.Visible = false;
+            //this.Close();
+            //this.Dispose();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameCommons;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -22,22 +23,20 @@ namespace ChineseChess
             //initialise the game
             UtilOps.CheckSaveDirectory();
             UtilOps.ClearTempFolder();
+            this.board = new ChessBoard();
             if (loadFromFile is null)
             {
-                this.board = new ChessBoard();
                 this.board.LoadGame();
                 this.AddAllToControl();
-                this.RandomStart();
+                this.moveSide = UtilOps.RandomStart();
                 this.UpdateTurnLabel();
                 this.SaveState();
             }
             else
             {
-                this.board = new ChessBoard();
                 this.AddCellsToControl();
                 this.LoadSave(loadFromFile);
                 this.AddAllTurnsToTurnBox();
-
             }
         }
 
@@ -48,22 +47,7 @@ namespace ChineseChess
 
 
         #region Turn Management
-        private void RandomStart()
-        {
-            Random playerStart = new Random();
-            //create random number between 0 and 10
-            int whoStart = playerStart.Next(10);
-            //red starts if smaller than 5, black starts if greater
-            if (whoStart < 5)
-            {
-                this.moveSide = Side.Red;
-            }
-            else
-            {
-                this.moveSide = Side.Black;
-            }
 
-        }
         private void UpdateTurnLabel(Side? side = null)
         {
             if (side != null)
@@ -158,7 +142,6 @@ namespace ChineseChess
             if (cell.ChessPiece != null)
             {
                 this.Controls.Add(cell.ChessPiece.ChessPicture);
-                this.chessPiecePics.Add(cell.ChessPiece.ChessPicture);
                 AddedEventHandlerToObjs(cell.ChessPiece.ChessPicture, cell.ChessPiece);
             }
         }
@@ -207,10 +190,7 @@ namespace ChineseChess
                 UtilOps.SaveFile(fileName, true);
             }
         }
-        private void DeleteTempFilesAfterThisTurn(int currentTurn)
-        {
-            UtilOps.DeleteTempFilesAfterTurn(currentTurn);
-        }
+
         #endregion
 
         #region State Management
@@ -229,7 +209,7 @@ namespace ChineseChess
         private void SaveState()
         {
             Turn currentTurnState = new Turn(this.currentTurn, this.moveSide, this.board.SaveGame().ToList());
-            currentTurnState.SaveTurnToFile();
+            currentTurnState.SaveToFile();
             this.turnRecord.Add(currentTurnState);
             this.AddTurnBoxItem(this.currentTurn);
         }
@@ -250,12 +230,10 @@ namespace ChineseChess
         }
         private void ClearBoard()
         {
-            foreach (var pic in this.chessPiecePics)
-            {
-                this.Controls.Remove(pic);
-            }
+            var allCells = this.board.GetAllCellsInOneList();
+            var allPieces = allCells.Where(x => x.ChessPiece != null).ToList();
+            allPieces.ForEach(c => this.Controls.Remove(c.ChessPiece.ChessPicture));
             this.board.ClearBoard();
-            this.chessPiecePics.Clear();
         }
 
         #region Events and Handler
@@ -321,7 +299,7 @@ namespace ChineseChess
                         this.board.EnableMoveAblePieces(this.moveSide);
                         this.UpdateTurnLabel();
                     }
-                    this.DeleteTempFilesAfterThisTurn(this.currentTurn);
+                    UtilOps.DeleteTempFilesAfterThisTurn(this.currentTurn);
                     this.AutoSaveToFile();
                 }
             }
@@ -370,7 +348,7 @@ namespace ChineseChess
         private void SaveButton_Click(object sender, EventArgs e)
         {
             string fileName = GetSaveFileName();
-            if(System.IO.File.Exists(FilePaths.rootSaveFilePath + fileName + ".sav"))
+            if (System.IO.File.Exists(FilePaths.rootSaveFilePath + fileName + ".sav"))
             {
                 var overwrite = MessageBox.Show("Save file exist. Overwrite existing file?", "Overwrite file", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (overwrite == DialogResult.Yes)
@@ -378,9 +356,9 @@ namespace ChineseChess
                     UtilOps.SaveFile(fileName, true);
                     SaveGameMessage();
                 }
-                else if(overwrite == DialogResult.No)
+                else if (overwrite == DialogResult.No)
                 {
-                    UtilOps.SaveFile(fileName, false); 
+                    UtilOps.SaveFile(fileName, false);
                     SaveGameMessage();
                 }
             }
@@ -416,8 +394,8 @@ namespace ChineseChess
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = FilePaths.rootSaveFilePath;
-            openFileDialog.Title = GlobalVariables.LoadDialogTitle;
-            openFileDialog.Filter = GlobalVariables.LoadDialogFliter;
+            openFileDialog.Title = GameCommons.DefaultVariables.LoadDialogTitle;
+            openFileDialog.Filter = GameCommons.DefaultVariables.LoadDialogFliter;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {

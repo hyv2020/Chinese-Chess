@@ -1,6 +1,6 @@
-﻿using System;
+﻿using GameCommons;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -8,27 +8,16 @@ namespace ChineseChess
 {
     public class ChessBoard
     {
+        public const int BoardSizeX = 9;
+        public const int BoardSizeY = 10;
         public List<List<Cell>> Cells { get; set; }
-        private static List<string> defaultStart = new List<string>()
-        {
-            "15 11 12 13 16 13 12 11 15",
-            "0 0 0 0 0 0 0 0 0",
-            "0 14 0 0 0 0 0 14 0",
-            "10 0 10 0 10 0 10 0 10",
-            "0 0 0 0 0 0 0 0 0",
-            "0 0 0 0 0 0 0 0 0",
-            "00 0 00 0 00 0 00 0 00",
-            "0 04 0 0 0 0 0 04 0",
-            "0 0 0 0 0 0 0 0 0",
-            "05 01 02 03 06 03 02 01 05",
-        };
         public ChessBoard()
         {
             this.Cells = new List<List<Cell>>();
-            for (int x = 0; x < GlobalVariables.BoardSizeX; x++)
+            for (int x = 0; x < BoardSizeX; x++)
             {
                 List<Cell> column = new List<Cell>();
-                for (var y = 0; y < GlobalVariables.BoardSizeY; y++)
+                for (var y = 0; y < BoardSizeY; y++)
                 {
                     column.Add(new Cell(x, y));
                 }
@@ -37,7 +26,7 @@ namespace ChineseChess
         }
         public void LoadGame(List<string> matchData = null)
         {
-            matchData = matchData ?? defaultStart;
+            matchData = matchData ?? GameCommons.DefaultVariables.defaultBoardStart;
             List<List<string>> board = new List<List<string>>();
             foreach (var row in matchData)
             {
@@ -113,7 +102,7 @@ namespace ChineseChess
         }
         public bool FindSpecificCell(int x, int y, out Cell cell)
         {
-            if (x < 0 || y < 0 || x > GlobalVariables.BoardSizeX - 1 || y > GlobalVariables.BoardSizeY - 1)
+            if (x < 0 || y < 0 || x > BoardSizeX - 1 || y > BoardSizeY - 1)
             {
                 cell = null;
                 return false;
@@ -166,7 +155,7 @@ namespace ChineseChess
         }
         public void ShowValidMoves(IEnumerable<Cell> validMovePositions)
         {
-            foreach(var cell in validMovePositions)
+            foreach (var cell in validMovePositions)
             {
                 cell.ValidMove.IsValidMove();
             }

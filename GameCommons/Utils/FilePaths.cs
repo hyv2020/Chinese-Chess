@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChineseChess
+namespace GameCommons
 {
     public static class FilePaths
     {

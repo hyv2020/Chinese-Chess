@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-namespace ChineseChess
+
+namespace GameCommons
 {
+    [Serializable]
     public class Turn
     {
         public readonly int TurnNumber;
@@ -13,7 +16,17 @@ namespace ChineseChess
             WhosTurn = whosTurn;
             BoardState = boardState;
         }
-        public void SaveTurnToFile()
+        public Turn()
+        {
+
+        }
+        public Turn(Side side)
+        {
+            TurnNumber = 1;
+            WhosTurn = side;
+            BoardState = DefaultVariables.defaultBoardStart;
+        }
+        public void SaveToFile()
         {
             using (StreamWriter outputFile = new StreamWriter(Path.Combine(FilePaths.rootTempFilePath, $"{this.TurnNumber}.txt")))
             {

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using GameCommons;
+using System.Collections.Generic;
 
 namespace ChineseChess
 {
@@ -13,48 +13,63 @@ namespace ChineseChess
         public override IEnumerable<Cell> FindValidMove(ChessBoard chessBoard)
         {
             List<Cell> availableCells = new List<Cell>();
-            if (CheckOccupiedCell(1, 1, chessBoard))
-            {
-                if (chessBoard.FindSpecificCell(this.X + 2, this.Y + 2, out var cell))
-                {
-                    if (CheckCrossRiver(cell))
-                    {
-                        availableCells.Add(cell);
-                    }
-                }
-            }
+            availableCells.AddRange(FindMoveDownLeft(chessBoard));
+            availableCells.AddRange(FindMoveUpLeft(chessBoard));
+            availableCells.AddRange(FindMoveDownRight(chessBoard));
+            availableCells.AddRange(FindMoveUpRight(chessBoard));
+            return FliterCellsToValidPoints(availableCells);
+        }
+
+        private IEnumerable<Cell> FindMoveDownLeft(ChessBoard chessBoard)
+        {
             if (CheckOccupiedCell(-1, -1, chessBoard))
             {
                 if (chessBoard.FindSpecificCell(this.X - 2, this.Y - 2, out var cell))
                 {
                     if (CheckCrossRiver(cell))
                     {
-                        availableCells.Add(cell);
+                        yield return cell;
                     }
                 }
             }
-            if (CheckOccupiedCell(1, -1, chessBoard))
+        }
+        private IEnumerable<Cell> FindMoveUpLeft(ChessBoard chessBoard)
+        {
+            if (chessBoard.FindSpecificCell(this.X + 1, this.Y - 1, out var cell))
             {
-                if (chessBoard.FindSpecificCell(this.X + 2, this.Y - 2, out var cell))
+                if (cell.AdvisorArea)
                 {
-                    if (CheckCrossRiver(cell))
-                    {
-                        availableCells.Add(cell);
-                    }
+                    yield return cell;
                 }
             }
+        }
+        private IEnumerable<Cell> FindMoveDownRight(ChessBoard chessBoard)
+        {
             if (CheckOccupiedCell(-1, 1, chessBoard))
             {
                 if (chessBoard.FindSpecificCell(this.X - 2, this.Y + 2, out var cell))
                 {
                     if (CheckCrossRiver(cell))
                     {
-                        availableCells.Add(cell);
+                        yield return cell;
                     }
                 }
             }
-            return FliterCellsToValidPoints(availableCells);
         }
+        private IEnumerable<Cell> FindMoveUpRight(ChessBoard chessBoard)
+        {
+            if (CheckOccupiedCell(1, -1, chessBoard))
+            {
+                if (chessBoard.FindSpecificCell(this.X + 2, this.Y - 2, out var cell))
+                {
+                    if (CheckCrossRiver(cell))
+                    {
+                        yield return cell;
+                    }
+                }
+            }
+        }
+
         private bool CheckOccupiedCell(int xOffset, int yOffset, ChessBoard chessBoard)
         {
             if (chessBoard.FindSpecificCell(this.X + xOffset, this.Y + yOffset, out var occupiedCell))

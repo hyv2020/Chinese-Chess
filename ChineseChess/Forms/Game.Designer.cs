@@ -45,7 +45,7 @@ namespace ChineseChess
             // 
             // QuitButton
             // 
-            this.QuitButton.Location = new System.Drawing.Point(944, 48);
+            this.QuitButton.Location = new System.Drawing.Point(937, 48);
             this.QuitButton.Name = "QuitButton";
             this.QuitButton.Size = new System.Drawing.Size(229, 64);
             this.QuitButton.TabIndex = 0;
@@ -57,7 +57,7 @@ namespace ChineseChess
             // 
             this.TurnLabel.AutoSize = true;
             this.TurnLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F);
-            this.TurnLabel.Location = new System.Drawing.Point(936, 144);
+            this.TurnLabel.Location = new System.Drawing.Point(929, 144);
             this.TurnLabel.Name = "TurnLabel";
             this.TurnLabel.Size = new System.Drawing.Size(219, 48);
             this.TurnLabel.TabIndex = 1;
@@ -67,7 +67,7 @@ namespace ChineseChess
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(913, 217);
+            this.label1.Location = new System.Drawing.Point(906, 217);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(310, 20);
             this.label1.TabIndex = 2;
@@ -77,7 +77,7 @@ namespace ChineseChess
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(913, 257);
+            this.label7.Location = new System.Drawing.Point(906, 257);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(235, 20);
             this.label7.TabIndex = 8;
@@ -87,7 +87,7 @@ namespace ChineseChess
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(913, 237);
+            this.label8.Location = new System.Drawing.Point(906, 237);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(288, 20);
             this.label8.TabIndex = 9;
@@ -96,7 +96,7 @@ namespace ChineseChess
             // TurnBox
             // 
             this.TurnBox.FormattingEnabled = true;
-            this.TurnBox.Location = new System.Drawing.Point(917, 309);
+            this.TurnBox.Location = new System.Drawing.Point(910, 309);
             this.TurnBox.Name = "TurnBox";
             this.TurnBox.Size = new System.Drawing.Size(231, 24);
             this.TurnBox.TabIndex = 10;
@@ -104,7 +104,7 @@ namespace ChineseChess
             // 
             // RestartButton
             // 
-            this.RestartButton.Location = new System.Drawing.Point(919, 597);
+            this.RestartButton.Location = new System.Drawing.Point(912, 597);
             this.RestartButton.Name = "RestartButton";
             this.RestartButton.Size = new System.Drawing.Size(229, 64);
             this.RestartButton.TabIndex = 11;
@@ -114,7 +114,7 @@ namespace ChineseChess
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(919, 457);
+            this.SaveButton.Location = new System.Drawing.Point(912, 457);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(229, 64);
             this.SaveButton.TabIndex = 12;
@@ -124,7 +124,7 @@ namespace ChineseChess
             // 
             // SaveFileNameTextBox
             // 
-            this.SaveFileNameTextBox.Location = new System.Drawing.Point(917, 409);
+            this.SaveFileNameTextBox.Location = new System.Drawing.Point(910, 409);
             this.SaveFileNameTextBox.Name = "SaveFileNameTextBox";
             this.SaveFileNameTextBox.Size = new System.Drawing.Size(231, 22);
             this.SaveFileNameTextBox.TabIndex = 13;
@@ -132,7 +132,7 @@ namespace ChineseChess
             // AutoSaveBox
             // 
             this.AutoSaveBox.AutoSize = true;
-            this.AutoSaveBox.Location = new System.Drawing.Point(917, 383);
+            this.AutoSaveBox.Location = new System.Drawing.Point(910, 383);
             this.AutoSaveBox.Name = "AutoSaveBox";
             this.AutoSaveBox.Size = new System.Drawing.Size(91, 20);
             this.AutoSaveBox.TabIndex = 14;
@@ -141,7 +141,7 @@ namespace ChineseChess
             // 
             // LoadButton
             // 
-            this.LoadButton.Location = new System.Drawing.Point(919, 527);
+            this.LoadButton.Location = new System.Drawing.Point(912, 527);
             this.LoadButton.Name = "LoadButton";
             this.LoadButton.Size = new System.Drawing.Size(229, 64);
             this.LoadButton.TabIndex = 15;

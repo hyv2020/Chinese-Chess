@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>ChineseChess</RootNamespace>
     <AssemblyName>ChineseChess</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -27,6 +27,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -56,6 +57,9 @@
     <Reference Include="Aspose.Zip, Version=22.11.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
       <HintPath>..\packages\Aspose.Zip.22.11.0\lib\net40\Aspose.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="NetworkCommsDotNet, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f58108eb6480f6ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetworkCommsDotNet.3.0.3\lib\NetworkCommsDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -75,6 +79,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Board\Cell.cs" />
+    <Compile Include="Board\ChessBoard.cs" />
+    <Compile Include="Board\ValidMove.cs" />
+    <Compile Include="ChessPiece\ChessPieceMethods.cs" />
+    <Compile Include="ChessPiece\Factory\ChessPiece.cs" />
+    <Compile Include="ChessPiece\Factory\ChessPieceAttr.cs" />
+    <Compile Include="ChessPiece\Factory\ChessPieceFactory.cs" />
+    <Compile Include="ChessPiece\Type\Advisor.cs" />
+    <Compile Include="ChessPiece\Type\Cannon.cs" />
+    <Compile Include="ChessPiece\Type\Chariot.cs" />
+    <Compile Include="ChessPiece\Type\General.cs" />
+    <Compile Include="ChessPiece\Type\Horse.cs" />
+    <Compile Include="ChessPiece\Type\Minister.cs" />
+    <Compile Include="ChessPiece\Type\Soldier.cs" />
+    <Compile Include="DrawFunctions\DrawBoardFunctions.cs" />
+    <Compile Include="Enum\ChessPieceType.cs" />
+    <Compile Include="Forms\NetworkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NetworkForm.Designer.cs">
+      <DependentUpon>NetworkForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Game.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,35 +113,26 @@
     <Compile Include="Forms\MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Turn.cs" />
+    <Compile Include="Forms\NetworkGame.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NetworkGame.designer.cs">
+      <DependentUpon>NetworkGame.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Board\Cell.cs" />
-    <Compile Include="Board\ChessBoard.cs" />
-    <Compile Include="Board\ValidMove.cs" />
-    <Compile Include="ChessPiece\ChessPieceMethods.cs" />
-    <Compile Include="ChessPiece\Factory\ChessPieceAttr.cs" />
-    <Compile Include="ChessPiece\Type\Advisor.cs" />
-    <Compile Include="ChessPiece\Type\Cannon.cs" />
-    <Compile Include="ChessPiece\Type\Chariot.cs" />
-    <Compile Include="ChessPiece\Factory\ChessPieceFactory.cs" />
-    <Compile Include="ChessPiece\Type\General.cs" />
-    <Compile Include="ChessPiece\Type\Horse.cs" />
-    <Compile Include="ChessPiece\Factory\ChessPiece.cs" />
-    <Compile Include="ChessPiece\Type\Minister.cs" />
-    <Compile Include="ChessPiece\Type\Soldier.cs" />
-    <Compile Include="DrawFunctions\DrawBoardFunctions.cs" />
-    <Compile Include="DrawFunctions\DrawChessPieceFunctions.cs" />
-    <Compile Include="Enum\ChessPieceType.cs" />
-    <Compile Include="Enum\Side.cs" />
-    <Compile Include="Utils\FilePaths.cs" />
-    <Compile Include="Utils\GlobalVariables.cs" />
     <Compile Include="Utils\UtilOps.cs" />
     <EmbeddedResource Include="Forms\Game.resx">
       <DependentUpon>Game.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NetworkForm.resx">
+      <DependentUpon>NetworkForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NetworkGame.resx">
+      <DependentUpon>NetworkGame.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -125,6 +142,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -151,6 +169,27 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GameClient\GameClient.csproj">
+      <Project>{86739a4d-8b1a-4182-91fa-d97a7bcabcc0}</Project>
+      <Name>GameClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameCommons\GameCommons.csproj">
+      <Project>{4e371112-6233-4188-9957-74361c7915a3}</Project>
+      <Name>GameCommons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameServer\GameServer.csproj">
+      <Project>{81b68548-08c8-406d-82db-68164dce65e3}</Project>
+      <Name>GameServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetworkCommons\NetworkCommons.csproj">
+      <Project>{18559c8e-7d83-4efa-93d1-7e3657e56618}</Project>
+      <Name>NetworkCommons</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
